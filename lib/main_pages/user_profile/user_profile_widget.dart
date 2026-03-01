@@ -8,8 +8,8 @@ import '/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'user_profile_model.dart';
@@ -38,18 +38,6 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
     super.initState();
     _model = createModel(context, () => UserProfileModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.currentUser = await UsersTable().queryRows(
-        queryFn: (q) => q.eqOrNull(
-          'id',
-          currentUserUid,
-        ),
-      );
-    });
-
-    _model.textController ??=
-        TextEditingController(text: _model.currentUser?.firstOrNull?.name);
     _model.textFieldFocusNode ??= FocusNode();
 
     animationsMap.addAll({
@@ -59,15 +47,15 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
           VisibilityEffect(duration: 400.ms),
           FadeEffect(
             curve: Curves.easeInOut,
-            delay: 400.0.ms,
-            duration: 600.0.ms,
+            delay: 200.0.ms,
+            duration: 500.0.ms,
             begin: 0.0,
             end: 1.0,
           ),
           MoveEffect(
             curve: Curves.easeInOut,
-            delay: 400.0.ms,
-            duration: 600.0.ms,
+            delay: 200.0.ms,
+            duration: 500.0.ms,
             begin: Offset(0.0, 60.0),
             end: Offset(0.0, 0.0),
           ),
@@ -93,10 +81,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<RoutesRow>>(
-      future: RoutesTable().queryRows(
+    return FutureBuilder<List<UsersRow>>(
+      future: UsersTable().querySingleRow(
         queryFn: (q) => q.eqOrNull(
-          'user',
+          'id',
           currentUserUid,
         ),
       ),
@@ -107,18 +95,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
             body: Center(
               child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Color(0xFF0056B3),
-                  ),
+                width: 40.0,
+                height: 40.0,
+                child: SpinKitWanderingCubes(
+                  color: FlutterFlowTheme.of(context).secondary,
+                  size: 40.0,
                 ),
               ),
             ),
           );
         }
-        List<RoutesRow> userProfileRoutesRowList = snapshot.data!;
+        List<UsersRow> userProfileUsersRowList = snapshot.data!;
+
+        final userProfileUsersRow = userProfileUsersRowList.isNotEmpty
+            ? userProfileUsersRowList.first
+            : null;
 
         return GestureDetector(
           onTap: () {
@@ -150,7 +141,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                         children: [
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 56.0, 0.0, 24.0),
+                                0.0, 48.0, 0.0, 12.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -158,7 +149,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                   alignment: AlignmentDirectional(-1.0, -1.0),
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        24.0, 0.0, 24.0, 0.0),
+                                        24.0, 0.0, 8.0, 0.0),
                                     child: Container(
                                       width: 85.0,
                                       height: 85.0,
@@ -182,8 +173,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                                 Duration(milliseconds: 500),
                                             fadeOutDuration:
                                                 Duration(milliseconds: 500),
-                                            imageUrl: _model.currentUser!
-                                                .firstOrNull!.avatarUrl!,
+                                            imageUrl:
+                                                userProfileUsersRow!.avatarUrl!,
                                             width: 100.0,
                                             height: 100.0,
                                             fit: BoxFit.cover,
@@ -200,7 +191,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                     Container(
                                       width: 200.0,
                                       child: TextFormField(
-                                        controller: _model.textController,
+                                        controller: _model.textController ??=
+                                            TextEditingController(
+                                          text: userProfileUsersRow.name,
+                                        ),
                                         focusNode: _model.textFieldFocusNode,
                                         onChanged: (_) => EasyDebounce.debounce(
                                           '_model.textController',
@@ -212,32 +206,6 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           isDense: true,
-                                          hintStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .labelMedium
-                                              .override(
-                                                font: GoogleFonts.roboto(
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMedium
-                                                          .fontStyle,
-                                                ),
-                                                letterSpacing: 0.0,
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                              ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                               color: Color(0x00000000),
@@ -275,10 +243,6 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                           ),
-                                          filled: true,
-                                          fillColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .primary,
                                           suffixIcon: Icon(
                                             Icons.edit,
                                             color: FlutterFlowTheme.of(context)
@@ -286,16 +250,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                           ),
                                         ),
                                         style: FlutterFlowTheme.of(context)
-                                            .titleMedium
+                                            .headlineMedium
                                             .override(
                                               font: GoogleFonts.roboto(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
-                                                        .titleMedium
+                                                        .headlineMedium
                                                         .fontWeight,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
-                                                        .titleMedium
+                                                        .headlineMedium
                                                         .fontStyle,
                                               ),
                                               color:
@@ -304,13 +268,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                               letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
-                                                      .titleMedium
+                                                      .headlineMedium
                                                       .fontWeight,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .titleMedium
+                                                      .headlineMedium
                                                       .fontStyle,
                                             ),
+                                        textAlign: TextAlign.start,
+                                        maxLines: 2,
+                                        minLines: 1,
                                         enableInteractiveSelection: true,
                                         validator: _model
                                             .textControllerValidator
@@ -319,9 +286,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 4.0, 0.0, 12.0),
+                                          12.0, 4.0, 0.0, 12.0),
                                       child: Text(
-                                        _model.currentUser!.firstOrNull!.email!,
+                                        currentUserEmail,
                                         style: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .override(
@@ -395,57 +362,35 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                             MainAxisAlignment.center,
                                         children: [
                                           Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 0.0, 0.0, 15.0),
-                                              child: FFButtonWidget(
-                                                onPressed: () async {
-                                                  context.pushNamed(
-                                                      AddRouteWidget.routeName);
-                                                },
-                                                text: 'Добавить рейс',
-                                                icon: FaIcon(
-                                                  FontAwesomeIcons.plus,
-                                                  size: 16.0,
-                                                ),
-                                                options: FFButtonOptions(
-                                                  width: double.infinity,
-                                                  height: 40.0,
-                                                  padding: EdgeInsets.all(8.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  iconColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .primaryText,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondary,
-                                                  textStyle: FlutterFlowTheme
-                                                          .of(context)
-                                                      .headlineSmall
-                                                      .override(
-                                                        font:
-                                                            GoogleFonts.roboto(
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .headlineSmall
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .headlineSmall
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        letterSpacing: 0.0,
+                                            child: FFButtonWidget(
+                                              onPressed: () async {
+                                                context.pushNamed(
+                                                    AddRouteWidget.routeName);
+                                              },
+                                              text: 'Добавить рейс',
+                                              icon: FaIcon(
+                                                FontAwesomeIcons.plus,
+                                                size: 16.0,
+                                              ),
+                                              options: FFButtonOptions(
+                                                width: double.infinity,
+                                                height: 40.0,
+                                                padding: EdgeInsets.all(8.0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional
+                                                        .fromSTEB(
+                                                            0.0, 0.0, 0.0, 0.0),
+                                                iconColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                                textStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .headlineSmall
+                                                    .override(
+                                                      font: GoogleFonts.roboto(
                                                         fontWeight:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -457,11 +402,25 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                                                 .headlineSmall
                                                                 .fontStyle,
                                                       ),
-                                                  elevation: 0.0,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .headlineSmall
+                                                              .fontWeight,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .headlineSmall
+                                                              .fontStyle,
+                                                    ),
+                                                elevation: 0.0,
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
                                               ),
                                             ),
                                           ),
@@ -652,10 +611,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                         EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 4.0, 0.0, 0.0),
+                              24.0, 0.0, 0.0, 0.0),
                           child: Text(
                             'Настройки аккаунта',
                             style: FlutterFlowTheme.of(context)
@@ -718,7 +678,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         12.0, 0.0, 0.0, 0.0),
                                     child: Text(
-                                      'Редактировать',
+                                      'Редактировать профиль',
                                       style: FlutterFlowTheme.of(context)
                                           .labelLarge
                                           .override(
@@ -845,7 +805,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 16.0, 0.0, 0.0),
+                              24.0, 12.0, 0.0, 0.0),
                           child: Text(
                             'О приложении',
                             style: FlutterFlowTheme.of(context)

@@ -754,33 +754,33 @@ class _HomeWidgetState extends State<HomeWidget> {
                               return Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 8.0, 0.0, 8.0),
-                                child: Container(
-                                  height: 50.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14.0),
-                                    border: Border.all(
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed(
+                                      RouteDetailsWidget.routeName,
+                                      queryParameters: {
+                                        'routeReceive': serializeParam(
+                                          listViewRoutesRow,
+                                          ParamType.SupabaseRow,
+                                        ),
+                                      }.withoutNulls,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                      border: Border.all(
+                                        color: FlutterFlowTheme.of(context)
+                                            .alternate,
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        context.pushNamed(
-                                          RouteDetailsWidget.routeName,
-                                          queryParameters: {
-                                            'routeReceive': serializeParam(
-                                              listViewRoutesRow,
-                                              ParamType.SupabaseRow,
-                                            ),
-                                          }.withoutNulls,
-                                        );
-                                      },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:

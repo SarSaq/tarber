@@ -151,7 +151,7 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
             body: SafeArea(
               top: true,
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(30.0, 0.0, 30.0, 44.0),
+                padding: EdgeInsetsDirectional.fromSTEB(30.0, 0.0, 30.0, 0.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,35 +217,45 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                           ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 4.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            width: 200.0,
-                                            child: TextFormField(
-                                              controller:
-                                                  _model.nameTextController ??=
-                                                      TextEditingController(
-                                                text: completeProfileUsersRow
-                                                    .name,
-                                              ),
-                                              focusNode: _model.nameFocusNode,
-                                              autofocus: false,
-                                              enabled: true,
-                                              obscureText: false,
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                labelStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .headlineSmall
-                                                    .override(
-                                                      font: GoogleFonts.roboto(
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          width: 200.0,
+                                          child: TextFormField(
+                                            controller:
+                                                _model.nameTextController ??=
+                                                    TextEditingController(
+                                              text:
+                                                  completeProfileUsersRow.name,
+                                            ),
+                                            focusNode: _model.nameFocusNode,
+                                            autofocus: false,
+                                            enabled: true,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              labelStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .headlineSmall
+                                                      .override(
+                                                        font:
+                                                            GoogleFonts.roboto(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .headlineSmall
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .headlineSmall
+                                                                  .fontStyle,
+                                                        ),
+                                                        letterSpacing: 0.0,
                                                         fontWeight:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -257,94 +267,59 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                                                 .headlineSmall
                                                                 .fontStyle,
                                                       ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineSmall
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineSmall
-                                                              .fontStyle,
-                                                    ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0x00000000),
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1.0,
                                                 ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0x00000000),
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1.0,
                                                 ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .error,
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                ),
-                                                focusedErrorBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .error,
-                                                    width: 1.0,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                ),
-                                                filled: true,
-                                                fillColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                suffixIcon: Icon(
-                                                  Icons.edit,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .secondaryText,
-                                                  size: 24.0,
+                                                      .error,
+                                                  width: 1.0,
                                                 ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
                                               ),
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .headlineMedium
-                                                  .override(
-                                                    font: GoogleFonts.roboto(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .headlineMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              filled: true,
+                                              fillColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              suffixIcon: Icon(
+                                                Icons.edit,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
                                                         .secondaryText,
-                                                    fontSize: 24.0,
-                                                    letterSpacing: 0.0,
+                                                size: 24.0,
+                                              ),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .headlineMedium
+                                                .override(
+                                                  font: GoogleFonts.roboto(
                                                     fontWeight:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -356,18 +331,33 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                                             .headlineMedium
                                                             .fontStyle,
                                                   ),
-                                              cursorColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                              enableInteractiveSelection: true,
-                                              validator: _model
-                                                  .nameTextControllerValidator
-                                                  .asValidator(context),
-                                            ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                  fontSize: 24.0,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .headlineMedium
+                                                          .fontStyle,
+                                                ),
+                                            cursorColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryText,
+                                            enableInteractiveSelection: true,
+                                            validator: _model
+                                                .nameTextControllerValidator
+                                                .asValidator(context),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -605,29 +595,26 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                               : null,
                                         ),
                                         style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
+                                            .bodyLarge
                                             .override(
                                               font: GoogleFonts.roboto(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
-                                                        .bodyMedium
+                                                        .bodyLarge
                                                         .fontWeight,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
-                                                        .bodyMedium
+                                                        .bodyLarge
                                                         .fontStyle,
                                               ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
                                               letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
+                                                      .bodyLarge
                                                       .fontWeight,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
+                                                      .bodyLarge
                                                       .fontStyle,
                                             ),
                                         maxLines: null,
@@ -746,7 +733,7 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                       ),
                                     ),
                                     Container(
-                                      width: 210.0,
+                                      width: 220.0,
                                       child: TextFormField(
                                         controller:
                                             _model.ruPhoneTextController,
@@ -858,29 +845,26 @@ class _CompleteProfileWidgetState extends State<CompleteProfileWidget> {
                                               : null,
                                         ),
                                         style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
+                                            .bodyLarge
                                             .override(
                                               font: GoogleFonts.roboto(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
-                                                        .bodyMedium
+                                                        .bodyLarge
                                                         .fontWeight,
                                                 fontStyle:
                                                     FlutterFlowTheme.of(context)
-                                                        .bodyMedium
+                                                        .bodyLarge
                                                         .fontStyle,
                                               ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
                                               letterSpacing: 0.0,
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
+                                                      .bodyLarge
                                                       .fontWeight,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyMedium
+                                                      .bodyLarge
                                                       .fontStyle,
                                             ),
                                         maxLines: null,

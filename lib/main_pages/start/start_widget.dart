@@ -225,7 +225,7 @@ class _StartWidgetState extends State<StartWidget> {
                             }
 
                             context.pushNamedAuth(
-                              HomeWidget.routeName,
+                              CompleteProfileWidget.routeName,
                               context.mounted,
                               extra: <String, dynamic>{
                                 '__transition_info__': TransitionInfo(

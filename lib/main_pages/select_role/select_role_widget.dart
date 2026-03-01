@@ -1,5 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
+import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -7,6 +8,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'select_role_model.dart';
 export 'select_role_model.dart';
@@ -21,10 +23,13 @@ class SelectRoleWidget extends StatefulWidget {
   State<SelectRoleWidget> createState() => _SelectRoleWidgetState();
 }
 
-class _SelectRoleWidgetState extends State<SelectRoleWidget> {
+class _SelectRoleWidgetState extends State<SelectRoleWidget>
+    with TickerProviderStateMixin {
   late SelectRoleModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final animationsMap = <String, AnimationInfo>{};
 
   @override
   void initState() {
@@ -54,6 +59,47 @@ class _SelectRoleWidgetState extends State<SelectRoleWidget> {
       }
     });
 
+    animationsMap.addAll({
+      'textOnPageLoadAnimation': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 400.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 400.0.ms,
+            duration: 600.0.ms,
+            begin: Offset(60.0, 0.0),
+            end: Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+      'columnOnPageLoadAnimation': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 400.0.ms,
+            duration: 600.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 400.0.ms,
+            duration: 600.0.ms,
+            begin: Offset(0.0, 60.0),
+            end: Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -73,6 +119,7 @@ class _SelectRoleWidgetState extends State<SelectRoleWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
         backgroundColor: FlutterFlowTheme.of(context).primary,
         appBar: responsiveVisibility(
           context: context,
@@ -169,7 +216,8 @@ class _SelectRoleWidgetState extends State<SelectRoleWidget> {
                                           .labelLarge
                                           .fontStyle,
                                     ),
-                              ),
+                              ).animateOnPageLoad(
+                                  animationsMap['textOnPageLoadAnimation']!),
                             ],
                           ),
                         ),
@@ -293,7 +341,8 @@ class _SelectRoleWidgetState extends State<SelectRoleWidget> {
                         ),
                       ),
                     ],
-                  ),
+                  ).animateOnPageLoad(
+                      animationsMap['columnOnPageLoadAnimation']!),
                 ),
               ],
             ),
