@@ -34,16 +34,16 @@ class FFAppState extends ChangeNotifier {
 
   late SharedPreferences prefs;
 
-  String _cityFROM = '';
-  String get cityFROM => _cityFROM;
-  set cityFROM(String value) {
-    _cityFROM = value;
+  String _searchFrom = '';
+  String get searchFrom => _searchFrom;
+  set searchFrom(String value) {
+    _searchFrom = value;
   }
 
-  String _cityTO = '';
-  String get cityTO => _cityTO;
-  set cityTO(String value) {
-    _cityTO = value;
+  String _searchTo = '';
+  String get searchTo => _searchTo;
+  set searchTo(String value) {
+    _searchTo = value;
   }
 
   DateTime? _DateRoute = DateTime.fromMillisecondsSinceEpoch(1740430620000);
@@ -95,6 +95,64 @@ class FFAppState extends ChangeNotifier {
   set userName(String value) {
     _userName = value;
     prefs.setString('ff_userName', value);
+  }
+
+  List<int> _userFavoriteID = [];
+  List<int> get userFavoriteID => _userFavoriteID;
+  set userFavoriteID(List<int> value) {
+    _userFavoriteID = value;
+  }
+
+  void addToUserFavoriteID(int value) {
+    userFavoriteID.add(value);
+  }
+
+  void removeFromUserFavoriteID(int value) {
+    userFavoriteID.remove(value);
+  }
+
+  void removeAtIndexFromUserFavoriteID(int index) {
+    userFavoriteID.removeAt(index);
+  }
+
+  void updateUserFavoriteIDAtIndex(
+    int index,
+    int Function(int) updateFn,
+  ) {
+    userFavoriteID[index] = updateFn(_userFavoriteID[index]);
+  }
+
+  void insertAtIndexInUserFavoriteID(int index, int value) {
+    userFavoriteID.insert(index, value);
+  }
+
+  List<String> _userFavoriteCarrierIds = [];
+  List<String> get userFavoriteCarrierIds => _userFavoriteCarrierIds;
+  set userFavoriteCarrierIds(List<String> value) {
+    _userFavoriteCarrierIds = value;
+  }
+
+  void addToUserFavoriteCarrierIds(String value) {
+    userFavoriteCarrierIds.add(value);
+  }
+
+  void removeFromUserFavoriteCarrierIds(String value) {
+    userFavoriteCarrierIds.remove(value);
+  }
+
+  void removeAtIndexFromUserFavoriteCarrierIds(int index) {
+    userFavoriteCarrierIds.removeAt(index);
+  }
+
+  void updateUserFavoriteCarrierIdsAtIndex(
+    int index,
+    String Function(String) updateFn,
+  ) {
+    userFavoriteCarrierIds[index] = updateFn(_userFavoriteCarrierIds[index]);
+  }
+
+  void insertAtIndexInUserFavoriteCarrierIds(int index, String value) {
+    userFavoriteCarrierIds.insert(index, value);
   }
 }
 

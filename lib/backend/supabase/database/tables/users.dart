@@ -14,11 +14,11 @@ class UsersRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => UsersTable();
 
-  String get id => getField<String>('id')!;
-  set id(String value) => setField<String>('id', value);
+  String? get id => getField<String>('id');
+  set id(String? value) => setField<String>('id', value);
 
-  DateTime get createdAt => getField<DateTime>('created_at')!;
-  set createdAt(DateTime value) => setField<DateTime>('created_at', value);
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
 
   String? get phone => getField<String>('phone');
   set phone(String? value) => setField<String>('phone', value);
@@ -34,4 +34,10 @@ class UsersRow extends SupabaseDataRow {
 
   String? get avatarUrl => getField<String>('avatar_url');
   set avatarUrl(String? value) => setField<String>('avatar_url', value);
+
+  bool? get agreedTerms => getField<bool>('agreed_terms');
+  set agreedTerms(bool? value) => setField<bool>('agreed_terms', value);
+
+  String? get description => getField<String>('description');
+  set description(String? value) => setField<String>('description', value);
 }

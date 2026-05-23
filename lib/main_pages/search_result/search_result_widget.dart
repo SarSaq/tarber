@@ -1,3 +1,4 @@
+import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
 import '/components/result_card/result_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -5,6 +6,8 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'search_result_model.dart';
@@ -13,7 +16,7 @@ export 'search_result_model.dart';
 class SearchResultWidget extends StatefulWidget {
   const SearchResultWidget({super.key});
 
-  static String routeName = 'Search_result';
+  static String routeName = 'search_result';
   static String routePath = '/searchResult';
 
   @override
@@ -29,6 +32,23 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => SearchResultModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.userSubscribes = await SubscribesTable().queryRows(
+        queryFn: (q) => q.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+      FFAppState().userFavoriteID = _model.userSubscribes!
+          .map((e) => e.routeId)
+          .withoutNulls
+          .toList()
+          .toList()
+          .cast<int>();
+      FFAppState().update(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -100,17 +120,17 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
             child: FutureBuilder<List<RoutesRow>>(
               future: RoutesTable().queryRows(
                 queryFn: (q) => q
                     .eqOrNull(
                       'from',
-                      FFAppState().cityFROM,
+                      FFAppState().searchFrom,
                     )
                     .eqOrNull(
                       'to',
-                      FFAppState().cityTO,
+                      FFAppState().searchTo,
                     ),
               ),
               builder: (context, snapshot) {
@@ -120,10 +140,9 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                     child: SizedBox(
                       width: 50.0,
                       height: 50.0,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFF0056B3),
-                        ),
+                      child: SpinKitFadingCube(
+                        color: FlutterFlowTheme.of(context).secondary,
+                        size: 50.0,
                       ),
                     ),
                   );
@@ -152,10 +171,9 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                             child: SizedBox(
                               width: 50.0,
                               height: 50.0,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF0056B3),
-                                ),
+                              child: SpinKitFadingCube(
+                                color: FlutterFlowTheme.of(context).secondary,
+                                size: 50.0,
                               ),
                             ),
                           );
@@ -176,9 +194,9 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                             context.pushNamed(
                               RouteDetailsWidget.routeName,
                               queryParameters: {
-                                'routeReceive': serializeParam(
-                                  listViewRoutesRow,
-                                  ParamType.SupabaseRow,
+                                'routeId': serializeParam(
+                                  listViewRoutesRow.id,
+                                  ParamType.int,
                                 ),
                               }.withoutNulls,
                             );
@@ -196,8 +214,9 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                               from: listViewRoutesRow.from!,
                               to: listViewRoutesRow.to!,
                               price: listViewRoutesRow.priceKG!,
-                              avatar: resultCardUsersRow!.phone!,
+                              avatar: resultCardUsersRow!.avatarUrl!,
                               profileName: resultCardUsersRow.name!,
+                              routeId: listViewRoutesRow.id,
                             ),
                           ),
                         );

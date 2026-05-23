@@ -8,8 +8,10 @@ import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'home_model.dart';
 export 'home_model.dart';
 
@@ -35,6 +37,9 @@ class _HomeWidgetState extends State<HomeWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FFAppState().searchFrom = '';
+      FFAppState().searchTo = '';
+      safeSetState(() {});
       _model.currentUser = await UsersTable().queryRows(
         queryFn: (q) => q.eqOrNull(
           'id',
@@ -59,9 +64,13 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return FutureBuilder<List<CitiesRow>>(
-      future: CitiesTable().queryRows(
-        queryFn: (q) => q,
+      future: _model.cityData(
+        requestFn: () => CitiesTable().queryRows(
+          queryFn: (q) => q,
+        ),
       ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
@@ -72,10 +81,9 @@ class _HomeWidgetState extends State<HomeWidget> {
               child: SizedBox(
                 width: 50.0,
                 height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Color(0xFF0056B3),
-                  ),
+                child: SpinKitFadingCube(
+                  color: FlutterFlowTheme.of(context).secondary,
+                  size: 50.0,
                 ),
               ),
             ),
@@ -103,19 +111,16 @@ class _HomeWidgetState extends State<HomeWidget> {
                       children: [
                         Container(
                           width: double.infinity,
-                          height: 421.0,
+                          height: 579.0,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Color(0xFF00A8BC), Color(0xFF00464D)],
+                              colors: [
+                                Color(0xFF00A8BC),
+                                FlutterFlowTheme.of(context).primary
+                              ],
                               stops: [0.0, 1.0],
                               begin: AlignmentDirectional(0.0, -1.0),
                               end: AlignmentDirectional(0, 1.0),
-                            ),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20.0),
-                              bottomRight: Radius.circular(20.0),
-                              topLeft: Radius.circular(0.0),
-                              topRight: Radius.circular(0.0),
                             ),
                           ),
                         ),
@@ -125,7 +130,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           children: [
                             Container(
                               width: double.infinity,
-                              height: 156.0,
+                              height: 136.2,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -140,7 +145,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   24.0, 12.0, 0.0, 0.0),
                               child: Text(
-                                'Поиск доставок',
+                                'Поиск рейсов',
                                 style: FlutterFlowTheme.of(context)
                                     .displayLarge
                                     .override(
@@ -166,7 +171,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  24.0, 16.0, 24.0, 20.0),
+                                  16.0, 16.0, 16.0, 20.0),
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -182,10 +187,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       ),
                                     )
                                   ],
-                                  borderRadius: BorderRadius.circular(24.0),
+                                  borderRadius: BorderRadius.circular(36.0),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(18.0),
+                                  padding: EdgeInsets.all(24.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -212,6 +217,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
                                                 letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
@@ -225,15 +233,44 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         ),
                                       ),
                                       FlutterFlowDropDown<String>(
-                                        controller: _model
-                                                .dropDownValueController1 ??=
-                                            FormFieldController<String>(null),
+                                        controller:
+                                            _model.fromCityValueController ??=
+                                                FormFieldController<String>(
+                                          _model.fromCityValue ??=
+                                              FFAppState().searchFrom,
+                                        ),
                                         options: homeCitiesRowList
                                             .map((e) => e.city)
                                             .withoutNulls
                                             .toList(),
-                                        onChanged: (val) => safeSetState(
-                                            () => _model.dropDownValue1 = val),
+                                        onChanged: (val) async {
+                                          safeSetState(
+                                              () => _model.fromCityValue = val);
+                                          FFAppState().searchFrom =
+                                              _model.fromCityValue!;
+                                          safeSetState(() {});
+                                          _model.fromCityData =
+                                              await CitiesTable().queryRows(
+                                            queryFn: (q) => q.eqOrNull(
+                                              'city',
+                                              FFAppState().searchFrom,
+                                            ),
+                                          );
+                                          if (_model.toCityData?.firstOrNull
+                                                  ?.country ==
+                                              _model.fromCityData?.firstOrNull
+                                                  ?.country) {
+                                            safeSetState(() {
+                                              _model.toCityValueController
+                                                  ?.reset();
+                                              _model.toCityValue = null;
+                                            });
+                                            FFAppState().searchTo = '';
+                                            safeSetState(() {});
+                                          }
+
+                                          safeSetState(() {});
+                                        },
                                         width: double.infinity,
                                         height: 50.0,
                                         textStyle: FlutterFlowTheme.of(context)
@@ -249,8 +286,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                              color: FFAppState().searchFrom !=
+                                                          ''
+                                                  ? FlutterFlowTheme.of(context)
+                                                      .primaryText
+                                                  : FlutterFlowTheme.of(context)
                                                       .alternate,
                                               letterSpacing: 0.0,
                                               fontWeight:
@@ -276,9 +316,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             FlutterFlowTheme.of(context)
                                                 .alternate,
                                         borderWidth: 0.5,
-                                        borderRadius: 12.0,
+                                        borderRadius: 36.0,
                                         margin: EdgeInsetsDirectional.fromSTEB(
-                                            12.0, 0.0, 12.0, 0.0),
+                                            24.0, 0.0, 12.0, 0.0),
                                         hidesUnderline: true,
                                         isOverButton: false,
                                         isSearchable: false,
@@ -304,6 +344,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
                                                 letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
@@ -317,15 +360,44 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         ),
                                       ),
                                       FlutterFlowDropDown<String>(
-                                        controller: _model
-                                                .dropDownValueController2 ??=
-                                            FormFieldController<String>(null),
+                                        controller:
+                                            _model.toCityValueController ??=
+                                                FormFieldController<String>(
+                                          _model.toCityValue ??=
+                                              FFAppState().searchTo,
+                                        ),
                                         options: homeCitiesRowList
                                             .map((e) => e.city)
                                             .withoutNulls
                                             .toList(),
-                                        onChanged: (val) => safeSetState(
-                                            () => _model.dropDownValue2 = val),
+                                        onChanged: (val) async {
+                                          safeSetState(
+                                              () => _model.toCityValue = val);
+                                          FFAppState().searchTo =
+                                              _model.toCityValue!;
+                                          safeSetState(() {});
+                                          _model.toCityData =
+                                              await CitiesTable().queryRows(
+                                            queryFn: (q) => q.eqOrNull(
+                                              'city',
+                                              FFAppState().searchTo,
+                                            ),
+                                          );
+                                          if (_model.fromCityData?.firstOrNull
+                                                  ?.country ==
+                                              _model.toCityData?.firstOrNull
+                                                  ?.country) {
+                                            safeSetState(() {
+                                              _model.fromCityValueController
+                                                  ?.reset();
+                                              _model.fromCityValue = null;
+                                            });
+                                            FFAppState().searchFrom = '';
+                                            safeSetState(() {});
+                                          }
+
+                                          safeSetState(() {});
+                                        },
                                         width: double.infinity,
                                         height: 50.0,
                                         textStyle: FlutterFlowTheme.of(context)
@@ -341,8 +413,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                         .bodyMedium
                                                         .fontStyle,
                                               ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                              color: FFAppState().searchTo !=
+                                                          ''
+                                                  ? FlutterFlowTheme.of(context)
+                                                      .primaryText
+                                                  : FlutterFlowTheme.of(context)
                                                       .alternate,
                                               letterSpacing: 0.0,
                                               fontWeight:
@@ -368,9 +443,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             FlutterFlowTheme.of(context)
                                                 .alternate,
                                         borderWidth: 0.5,
-                                        borderRadius: 12.0,
+                                        borderRadius: 36.0,
                                         margin: EdgeInsetsDirectional.fromSTEB(
-                                            12.0, 0.0, 12.0, 0.0),
+                                            24.0, 0.0, 12.0, 0.0),
                                         hidesUnderline: true,
                                         isOverButton: false,
                                         isSearchable: false,
@@ -396,6 +471,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
                                                 letterSpacing: 0.0,
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
@@ -497,7 +575,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                                BorderRadius.circular(24.0),
                                             border: Border.all(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -516,7 +594,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                   Icons.calendar_today,
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .alternate,
+                                                      .secondary,
                                                   size: 24.0,
                                                 ),
                                                 Padding(
@@ -535,38 +613,44 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                       ),
                                                       'Выбери дату',
                                                     ),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .roboto(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
+                                                    style:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              font: GoogleFonts
+                                                                  .roboto(
+                                                                fontWeight: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
                                                                     .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
+                                                                fontStyle: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
                                                                     .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .alternate,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
+                                                              ),
+                                                              color: _model
+                                                                          .datePicked !=
+                                                                      null
+                                                                  ? FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText
+                                                                  : FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .alternate,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontWeight,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
                                                   ),
                                                 ),
                                               ],
@@ -579,20 +663,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             16.0, 20.0, 16.0, 0.0),
                                         child: FFButtonWidget(
                                           onPressed: () async {
-                                            if ((_model.dropDownValue1 !=
-                                                        null &&
-                                                    _model.dropDownValue1 !=
+                                            if ((_model.fromCityValue != null &&
+                                                    _model.fromCityValue !=
                                                         '') &&
-                                                (_model.dropDownValue2 !=
-                                                        null &&
-                                                    _model.dropDownValue2 !=
-                                                        '')) {
-                                              FFAppState().cityFROM =
-                                                  _model.dropDownValue1!;
-                                              FFAppState().cityTO =
-                                                  _model.dropDownValue2!;
-                                              FFAppState().DateRoute =
-                                                  _model.datePicked;
+                                                (_model.toCityValue != null &&
+                                                    _model.toCityValue != '')) {
+                                              context.pushNamed(
+                                                  SearchResultWidget.routeName);
                                             } else {
                                               await showDialog(
                                                 context: context,
@@ -613,9 +690,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               );
                                               return;
                                             }
-
-                                            context.pushNamed(
-                                                SearchResultWidget.routeName);
                                           },
                                           text: 'Искать',
                                           icon: FaIcon(
@@ -624,7 +698,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                           ),
                                           options: FFButtonOptions(
                                             width: double.infinity,
-                                            height: 56.0,
+                                            height: 52.0,
                                             padding: EdgeInsets.all(8.0),
                                             iconPadding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -668,7 +742,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                     ),
                                             elevation: 0.0,
                                             borderRadius:
-                                                BorderRadius.circular(16.0),
+                                                BorderRadius.circular(36.0),
                                           ),
                                         ),
                                       ),
@@ -682,191 +756,202 @@ class _HomeWidgetState extends State<HomeWidget> {
                       ],
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Row(
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          16.0, 12.0, 16.0, 12.0),
+                      child: Column(
                         mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Text(
-                              'Ближайщие рейсы',
-                              textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context)
-                                  .titleMedium
-                                  .override(
-                                    font: GoogleFonts.roboto(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 12.0, 24.0, 0.0),
-                      child: FutureBuilder<List<RoutesRow>>(
-                        future: RoutesTable().queryRows(
-                          queryFn: (q) => q.order('created_at'),
-                          limit: 2,
-                        ),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: SizedBox(
-                                width: 50.0,
-                                height: 50.0,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Color(0xFF0056B3),
-                                  ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                child: Text(
+                                  'Ближайщие рейсы',
+                                  textAlign: TextAlign.start,
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.roboto(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMedium
+                                                  .fontStyle,
+                                        ),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontStyle,
+                                      ),
                                 ),
                               ),
-                            );
-                          }
-                          List<RoutesRow> listViewRoutesRowList =
-                              snapshot.data!;
-
-                          return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            primary: false,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: listViewRoutesRowList.length,
-                            itemBuilder: (context, listViewIndex) {
-                              final listViewRoutesRow =
-                                  listViewRoutesRowList[listViewIndex];
-                              return Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 8.0, 0.0, 8.0),
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    context.pushNamed(
-                                      RouteDetailsWidget.routeName,
-                                      queryParameters: {
-                                        'routeReceive': serializeParam(
-                                          listViewRoutesRow,
-                                          ParamType.SupabaseRow,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  },
-                                  child: Container(
+                            ],
+                          ),
+                          FutureBuilder<List<RoutesRow>>(
+                            future: _model.tripsData(
+                              requestFn: () => RoutesTable().queryRows(
+                                queryFn: (q) => q.order('created_at'),
+                                limit: 2,
+                              ),
+                            ),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50.0,
                                     height: 50.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '${listViewRoutesRow.from} - ${listViewRoutesRow.to}',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  font: GoogleFonts.roboto(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
-                                                  fontSize: 18.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                          Text(
-                                            dateTimeFormat(
-                                              "MMMd",
-                                              listViewRoutesRow.routeDate!,
-                                              locale:
-                                                  FFLocalizations.of(context)
-                                                      .languageCode,
-                                            ).maybeHandleOverflow(
-                                              maxChars: 20,
-                                            ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  font: GoogleFonts.roboto(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
-                                                  fontSize: 18.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
+                                    child: SpinKitFadingCube(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondary,
+                                      size: 50.0,
                                     ),
                                   ),
-                                ),
+                                );
+                              }
+                              List<RoutesRow> listViewRoutesRowList =
+                                  snapshot.data!;
+
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                primary: false,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: listViewRoutesRowList.length,
+                                itemBuilder: (context, listViewIndex) {
+                                  final listViewRoutesRow =
+                                      listViewRoutesRowList[listViewIndex];
+                                  return Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 8.0),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        context.pushNamed(
+                                          RouteDetailsWidget.routeName,
+                                          queryParameters: {
+                                            'routeId': serializeParam(
+                                              listViewRoutesRow.id,
+                                              ParamType.int,
+                                            ),
+                                          }.withoutNulls,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  12.0, 0.0, 12.0, 0.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '${listViewRoutesRow.from} - ${listViewRoutesRow.to}',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyLarge
+                                                    .override(
+                                                      font: GoogleFonts.roboto(
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontStyle,
+                                                      ),
+                                                      fontSize: 16.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontWeight,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontStyle,
+                                                    ),
+                                              ),
+                                              Text(
+                                                dateTimeFormat(
+                                                  "MMMd",
+                                                  listViewRoutesRow.routeDate!,
+                                                  locale: FFLocalizations.of(
+                                                          context)
+                                                      .languageCode,
+                                                ).maybeHandleOverflow(
+                                                  maxChars: 20,
+                                                ),
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyLarge
+                                                    .override(
+                                                      font: GoogleFonts.roboto(
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontStyle,
+                                                      ),
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontWeight,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontStyle,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
+                          ),
+                        ].divide(SizedBox(height: 8.0)),
                       ),
                     ),
                   ],

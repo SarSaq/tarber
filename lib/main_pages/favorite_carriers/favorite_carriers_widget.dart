@@ -1,0 +1,235 @@
+import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
+import '/components/empty_state/empty_state_widget.dart';
+import '/components/favorite_carrier_card/favorite_carrier_card_widget.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'favorite_carriers_model.dart';
+export 'favorite_carriers_model.dart';
+
+class FavoriteCarriersWidget extends StatefulWidget {
+  const FavoriteCarriersWidget({super.key});
+
+  static String routeName = 'favorite_carriers';
+  static String routePath = '/favoriteCarriers';
+
+  @override
+  State<FavoriteCarriersWidget> createState() => _FavoriteCarriersWidgetState();
+}
+
+class _FavoriteCarriersWidgetState extends State<FavoriteCarriersWidget> {
+  late FavoriteCarriersModel _model;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => FavoriteCarriersModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.userSubscribes = await SubscribesTable().queryRows(
+        queryFn: (q) => q.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+      FFAppState().userFavoriteID = _model.userSubscribes!
+          .map((e) => e.routeId)
+          .withoutNulls
+          .toList()
+          .toList()
+          .cast<int>();
+      safeSetState(() {});
+      _model.userCarrierFavorites = await FavoriteCarriersTable().queryRows(
+        queryFn: (q) => q.eqOrNull(
+          'user_id',
+          currentUserUid,
+        ),
+      );
+      FFAppState().userFavoriteCarrierIds = _model.userCarrierFavorites!
+          .map((e) => e.carrierId)
+          .withoutNulls
+          .toList()
+          .toList()
+          .cast<String>();
+      safeSetState(() {});
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          appBar: responsiveVisibility(
+            context: context,
+            tablet: false,
+            tabletLandscape: false,
+            desktop: false,
+          )
+              ? AppBar(
+                  backgroundColor: Color(0x00EE8B60),
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    'Избранные перевозчики',
+                    style: FlutterFlowTheme.of(context).titleLarge.override(
+                          font: GoogleFonts.roboto(
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .fontStyle,
+                          ),
+                          letterSpacing: 0.0,
+                          fontWeight: FlutterFlowTheme.of(context)
+                              .titleLarge
+                              .fontWeight,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).titleLarge.fontStyle,
+                        ),
+                  ),
+                  actions: [],
+                  centerTitle: true,
+                  elevation: 0.0,
+                )
+              : null,
+          body: SafeArea(
+            top: true,
+            child: FutureBuilder<List<FavoriteCarriersRow>>(
+              future: FavoriteCarriersTable().queryRows(
+                queryFn: (q) => q.eqOrNull(
+                  'user_id',
+                  currentUserUid,
+                ),
+              ),
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      height: 50.0,
+                      child: SpinKitFadingCube(
+                        color: FlutterFlowTheme.of(context).secondary,
+                        size: 50.0,
+                      ),
+                    ),
+                  );
+                }
+                List<FavoriteCarriersRow> carriersFavoriteCarriersRowList =
+                    snapshot.data!;
+
+                if (carriersFavoriteCarriersRowList.isEmpty) {
+                  return Center(
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * 0.7,
+                      child: EmptyStateWidget(
+                        iconName: Icon(
+                          Icons.star_rounded,
+                          color: FlutterFlowTheme.of(context).secondary,
+                          size: 48.0,
+                        ),
+                        message:
+                            'Нажмите на звёздочку в профиле перевозчика, чтобы добавить его в избранное',
+                        title: 'У вас нет избранных перевозчиков',
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  scrollDirection: Axis.vertical,
+                  itemCount: carriersFavoriteCarriersRowList.length,
+                  separatorBuilder: (_, __) => SizedBox(height: 16.0),
+                  itemBuilder: (context, carriersIndex) {
+                    final carriersFavoriteCarriersRow =
+                        carriersFavoriteCarriersRowList[carriersIndex];
+                    return FutureBuilder<List<UsersRow>>(
+                      future: UsersTable().querySingleRow(
+                        queryFn: (q) => q.eqOrNull(
+                          'id',
+                          carriersFavoriteCarriersRow.carrierId,
+                        ),
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: SpinKitFadingCube(
+                                color: FlutterFlowTheme.of(context).secondary,
+                                size: 50.0,
+                              ),
+                            ),
+                          );
+                        }
+                        List<UsersRow> containerUsersRowList = snapshot.data!;
+
+                        final containerUsersRow =
+                            containerUsersRowList.isNotEmpty
+                                ? containerUsersRowList.first
+                                : null;
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                          ),
+                          child: wrapWithModel(
+                            model: _model.favoriteCarrierCardModels.getModel(
+                              containerUsersRow!.id!,
+                              carriersIndex,
+                            ),
+                            updateCallback: () => safeSetState(() {}),
+                            child: FavoriteCarrierCardWidget(
+                              key: Key(
+                                'Keylt9_${containerUsersRow.id!}',
+                              ),
+                              sumRoutes: 0,
+                              avatar: containerUsersRow.avatarUrl!,
+                              carrierName: containerUsersRow.name!,
+                              carrierId: containerUsersRow.id,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

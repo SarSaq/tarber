@@ -1,12 +1,9 @@
-import '/auth/supabase_auth/auth_util.dart';
-import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
-import '/index.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -16,12 +13,7 @@ import 'phone_verify_model.dart';
 export 'phone_verify_model.dart';
 
 class PhoneVerifyWidget extends StatefulWidget {
-  const PhoneVerifyWidget({
-    super.key,
-    required this.phone,
-  });
-
-  final String? phone;
+  const PhoneVerifyWidget({super.key});
 
   static String routeName = 'Phone_Verify';
   static String routePath = '/phoneVerify';
@@ -291,6 +283,9 @@ class _PhoneVerifyWidgetState extends State<PhoneVerifyWidget>
                                   FlutterFlowTheme.of(context).secondaryText,
                               obscureText: false,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               pinTheme: PinTheme(
                                 fieldHeight: 55.0,
                                 fieldWidth: 50.0,
@@ -311,48 +306,6 @@ class _PhoneVerifyWidgetState extends State<PhoneVerifyWidget>
                               ),
                               controller: _model.pinCodeController,
                               onChanged: (_) {},
-                              onCompleted: (_) async {
-                                _model.infoVerify =
-                                    await actions.verifyPhoneOtp(
-                                  widget.phone!,
-                                  _model.pinCodeController!.text,
-                                );
-                                if (_model.infoVerify == true) {
-                                  context.goNamed(AddNameWidget.routeName);
-
-                                  await Future.delayed(
-                                    Duration(
-                                      milliseconds: 1500,
-                                    ),
-                                  );
-                                  await UsersTable().insert({
-                                    'id': currentUserUid,
-                                    'phone': widget.phone,
-                                  });
-                                } else {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (alertDialogContext) {
-                                      return AlertDialog(
-                                        title: Text('Ошибка'),
-                                        content: Text('Неверный код'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                alertDialogContext),
-                                            child: Text('Ok'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  safeSetState(() {
-                                    _model.pinCodeController?.clear();
-                                  });
-                                }
-
-                                safeSetState(() {});
-                              },
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: _model.pinCodeControllerValidator
@@ -406,10 +359,10 @@ class _PhoneVerifyWidgetState extends State<PhoneVerifyWidget>
                                         ),
                                     elevation: 0.0,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(25.0),
-                                      bottomRight: Radius.circular(8.0),
                                       topLeft: Radius.circular(25.0),
                                       topRight: Radius.circular(25.0),
+                                      bottomLeft: Radius.circular(25.0),
+                                      bottomRight: Radius.circular(8.0),
                                     ),
                                   ),
                                 ),

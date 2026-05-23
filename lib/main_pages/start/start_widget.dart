@@ -1,4 +1,5 @@
 import '/auth/supabase_auth/auth_util.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -56,65 +57,70 @@ class _StartWidgetState extends State<StartWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primary,
-        body: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 44.0),
+        body: Container(
+          height: MediaQuery.sizeOf(context).height * 1.0,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                FlutterFlowTheme.of(context).primary,
+                FlutterFlowTheme.of(context).accent4
+              ],
+              stops: [0.0, 1.0],
+              begin: AlignmentDirectional(0.0, -1.0),
+              end: AlignmentDirectional(0, 1.0),
+            ),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 100.0, 0.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 110.0,
-                        height: 110.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: Image.asset(
-                              'assets/images/logo-01.png',
-                            ).image,
-                          ),
-                          borderRadius: BorderRadius.circular(23.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 110.0,
+                      height: 110.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: Image.asset(
+                            'assets/images/logo-01.png',
+                          ).image,
                         ),
+                        borderRadius: BorderRadius.circular(23.0),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 70.0, 24.0, 24.0),
-                        child: Text(
-                          'Ваш груз - в пути!',
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .displayLarge
-                              .override(
-                                font: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.normal,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .displayLarge
-                                      .fontStyle,
-                                ),
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                fontSize: 32.0,
-                                letterSpacing: 0.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          24.0, 50.0, 24.0, 24.0),
+                      child: Text(
+                        'Ваш груз - в пути!',
+                        textAlign: TextAlign.center,
+                        style: FlutterFlowTheme.of(context)
+                            .displayLarge
+                            .override(
+                              font: GoogleFonts.roboto(
                                 fontWeight: FontWeight.normal,
                                 fontStyle: FlutterFlowTheme.of(context)
                                     .displayLarge
                                     .fontStyle,
                               ),
-                        ),
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              fontSize: 32.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .displayLarge
+                                  .fontStyle,
+                            ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -217,24 +223,38 @@ class _StartWidgetState extends State<StartWidget> {
                             0.0, 12.0, 0.0, 12.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            GoRouter.of(context).prepareAuthEvent();
-                            final user =
-                                await authManager.signInWithGoogle(context);
-                            if (user == null) {
+                            if (_model.checkboxValue == true) {
+                              GoRouter.of(context).prepareAuthEvent();
+                              final user =
+                                  await authManager.signInWithGoogle(context);
+                              if (user == null) {
+                                return;
+                              }
+                              await UsersTable().update(
+                                data: {
+                                  'agreed_terms': true,
+                                },
+                                matchingRows: (rows) => rows.eqOrNull(
+                                  'id',
+                                  currentUserUid,
+                                ),
+                              );
+
+                              context.pushNamedAuth(
+                                CompleteProfileWidget.routeName,
+                                context.mounted,
+                                extra: <String, dynamic>{
+                                  '__transition_info__': TransitionInfo(
+                                    hasTransition: true,
+                                    transitionType: PageTransitionType.fade,
+                                  ),
+                                },
+                              );
+                            } else {
+                              _model.showTermsError = true;
+                              safeSetState(() {});
                               return;
                             }
-
-                            context.pushNamedAuth(
-                              CompleteProfileWidget.routeName,
-                              context.mounted,
-                              extra: <String, dynamic>{
-                                '__transition_info__': TransitionInfo(
-                                  hasTransition: true,
-                                  transitionType: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 0),
-                                ),
-                              },
-                            );
                           },
                           text: 'Вход по Google',
                           icon: FaIcon(
@@ -272,134 +292,52 @@ class _StartWidgetState extends State<StartWidget> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 12.0, 0.0, 12.0),
-                        child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
-                          },
-                          text: 'Вход по Apple',
-                          icon: Icon(
-                            Icons.apple_rounded,
-                            size: 32.0,
-                          ),
-                          options: FFButtonOptions(
-                            width: double.infinity,
-                            height: 56.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 12.0, 0.0),
-                            iconColor: FlutterFlowTheme.of(context).primaryText,
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleLarge
-                                .override(
-                                  font: GoogleFonts.roboto(
+                      if (responsiveVisibility(
+                        context: context,
+                        phone: false,
+                      ))
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 12.0, 0.0, 12.0),
+                          child: FFButtonWidget(
+                            onPressed: () {
+                              print('Button pressed ...');
+                            },
+                            text: 'Вход по Apple',
+                            icon: Icon(
+                              Icons.apple_rounded,
+                              size: 32.0,
+                            ),
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 56.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 12.0, 0.0),
+                              iconColor:
+                                  FlutterFlowTheme.of(context).primaryText,
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleLarge
+                                  .override(
+                                    font: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleLarge
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleLarge
                                         .fontStyle,
                                   ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleLarge
-                                      .fontStyle,
-                                ),
-                            elevation: 0.0,
-                            borderRadius: BorderRadius.circular(12.0),
-                            hoverColor: FlutterFlowTheme.of(context).alternate,
-                          ),
-                        ),
-                      ),
-                      if (responsiveVisibility(
-                        context: context,
-                        phone: false,
-                        tablet: false,
-                      ))
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 24.0, 0.0, 0.0),
-                          child: RichText(
-                            textScaler: MediaQuery.of(context).textScaler,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Уже есть учетная запись?  ',
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelLarge
-                                      .override(
-                                        font: GoogleFonts.roboto(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontStyle,
-                                      ),
-                                ),
-                                TextSpan(
-                                  text: 'Войти',
-                                  style: FlutterFlowTheme.of(context)
-                                      .headlineSmall
-                                      .override(
-                                        font: GoogleFonts.roboto(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineSmall
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .fontStyle,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                )
-                              ],
-                              style: FlutterFlowTheme.of(context)
-                                  .labelLarge
-                                  .override(
-                                    font: GoogleFonts.roboto(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelLarge
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelLarge
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .fontStyle,
-                                  ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(12.0),
+                              hoverColor:
+                                  FlutterFlowTheme.of(context).alternate,
                             ),
                           ),
                         ),
@@ -419,25 +357,34 @@ class _StartWidgetState extends State<StartWidget> {
                                 ),
                               ),
                               unselectedWidgetColor:
-                                  FlutterFlowTheme.of(context).alternate,
+                                  _model.showTermsError == true
+                                      ? FlutterFlowTheme.of(context).accent3
+                                      : Color(0x40FFFFFF),
                             ),
                             child: Checkbox(
-                              value: _model.checkboxValue ??= true,
+                              value: _model.checkboxValue ??= false,
                               onChanged: (newValue) async {
                                 safeSetState(
                                     () => _model.checkboxValue = newValue!);
+                                if (newValue!) {
+                                  _model.showTermsError = false;
+                                  safeSetState(() {});
+                                }
                               },
-                              side: (FlutterFlowTheme.of(context).alternate !=
+                              side: ((_model.showTermsError == true
+                                          ? FlutterFlowTheme.of(context).accent3
+                                          : Color(0x40FFFFFF)) !=
                                       null)
                                   ? BorderSide(
                                       width: 2,
-                                      color: FlutterFlowTheme.of(context)
-                                          .alternate,
+                                      color: (_model.showTermsError == true
+                                          ? FlutterFlowTheme.of(context).accent3
+                                          : Color(0x40FFFFFF)),
                                     )
                                   : null,
-                              activeColor:
-                                  FlutterFlowTheme.of(context).secondaryText,
-                              checkColor: FlutterFlowTheme.of(context).primary,
+                              activeColor: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              checkColor: FlutterFlowTheme.of(context).accent4,
                             ),
                           ),
                           Text(
@@ -453,7 +400,9 @@ class _StartWidgetState extends State<StartWidget> {
                                         .labelMedium
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).alternate,
+                                  color: _model.showTermsError == true
+                                      ? FlutterFlowTheme.of(context).accent3
+                                      : Color(0x40FFFFFF),
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
                                       .labelMedium
@@ -476,7 +425,9 @@ class _StartWidgetState extends State<StartWidget> {
                                         .labelMedium
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).alternate,
+                                  color: _model.showTermsError == true
+                                      ? FlutterFlowTheme.of(context).accent3
+                                      : Color(0x40FFFFFF),
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
                                       .labelMedium
@@ -489,7 +440,7 @@ class _StartWidgetState extends State<StartWidget> {
                           ),
                         ],
                       ),
-                    ],
+                    ].divide(SizedBox(height: 8.0)),
                   ),
                 ),
               ),

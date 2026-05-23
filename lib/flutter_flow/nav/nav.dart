@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '/backend/supabase/supabase.dart';
 
 import '/auth/base_auth_user_provider.dart';
 
@@ -95,23 +94,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PhoneVerifyWidget.routeName,
           path: PhoneVerifyWidget.routePath,
-          builder: (context, params) => PhoneVerifyWidget(
-            phone: params.getParam(
-              'phone',
-              ParamType.String,
-            ),
-          ),
+          builder: (context, params) => PhoneVerifyWidget(),
         ),
         FFRoute(
           name: HomeWidget.routeName,
           path: HomeWidget.routePath,
           builder: (context, params) =>
               params.isEmpty ? NavBarPage(initialPage: 'Home') : HomeWidget(),
-        ),
-        FFRoute(
-          name: TestWidget.routeName,
-          path: TestWidget.routePath,
-          builder: (context, params) => TestWidget(),
         ),
         FFRoute(
           name: SearchResultWidget.routeName,
@@ -123,49 +112,23 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             path: UserProfileWidget.routePath,
             builder: (context, params) => params.isEmpty
                 ? NavBarPage(
-                    initialPage: 'User_Profile',
+                    initialPage: 'user_profile',
                     disableResizeToAvoidBottomInset: true,
                   )
                 : NavBarPage(
-                    initialPage: 'User_Profile',
+                    initialPage: 'user_profile',
                     page: UserProfileWidget(),
                     disableResizeToAvoidBottomInset: true,
                   )),
         FFRoute(
-          name: AddRouteWidget.routeName,
-          path: AddRouteWidget.routePath,
-          requireAuth: true,
-          builder: (context, params) => AddRouteWidget(),
-        ),
-        FFRoute(
           name: RouteDetailsWidget.routeName,
           path: RouteDetailsWidget.routePath,
           builder: (context, params) => RouteDetailsWidget(
-            routeReceive: params.getParam<RoutesRow>(
-              'routeReceive',
-              ParamType.SupabaseRow,
+            routeId: params.getParam(
+              'routeId',
+              ParamType.int,
             ),
           ),
-        ),
-        FFRoute(
-          name: PhoneLoginWidget.routeName,
-          path: PhoneLoginWidget.routePath,
-          builder: (context, params) => PhoneLoginWidget(),
-        ),
-        FFRoute(
-          name: AddNameWidget.routeName,
-          path: AddNameWidget.routePath,
-          builder: (context, params) => AddNameWidget(),
-        ),
-        FFRoute(
-          name: AddRolesWidget.routeName,
-          path: AddRolesWidget.routePath,
-          builder: (context, params) => AddRolesWidget(),
-        ),
-        FFRoute(
-          name: UserTestWidget.routeName,
-          path: UserTestWidget.routePath,
-          builder: (context, params) => UserTestWidget(),
         ),
         FFRoute(
           name: AddPhoneWidget.routeName,
@@ -181,6 +144,49 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: SelectRoleWidget.routeName,
           path: SelectRoleWidget.routePath,
           builder: (context, params) => SelectRoleWidget(),
+        ),
+        FFRoute(
+          name: AddTripWidget.routeName,
+          path: AddTripWidget.routePath,
+          builder: (context, params) => AddTripWidget(),
+        ),
+        FFRoute(
+          name: ComingSoonWidget.routeName,
+          path: ComingSoonWidget.routePath,
+          builder: (context, params) => ComingSoonWidget(),
+        ),
+        FFRoute(
+          name: CarrierPublicWidget.routeName,
+          path: CarrierPublicWidget.routePath,
+          builder: (context, params) => CarrierPublicWidget(
+            carrierID: params.getParam(
+              'carrierID',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+            name: FavoriteRoutesWidget.routeName,
+            path: FavoriteRoutesWidget.routePath,
+            builder: (context, params) => params.isEmpty
+                ? NavBarPage(initialPage: 'favorite_routes')
+                : NavBarPage(
+                    initialPage: 'favorite_routes',
+                    page: FavoriteRoutesWidget(),
+                  )),
+        FFRoute(
+            name: FavoriteCarriersWidget.routeName,
+            path: FavoriteCarriersWidget.routePath,
+            builder: (context, params) => params.isEmpty
+                ? NavBarPage(initialPage: 'favorite_carriers')
+                : NavBarPage(
+                    initialPage: 'favorite_carriers',
+                    page: FavoriteCarriersWidget(),
+                  )),
+        FFRoute(
+          name: EditProfileWidget.routeName,
+          path: EditProfileWidget.routePath,
+          builder: (context, params) => EditProfileWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -418,7 +424,11 @@ class TransitionInfo {
   final Duration duration;
   final Alignment? alignment;
 
-  static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
+  static TransitionInfo appDefault() => TransitionInfo(
+        hasTransition: true,
+        transitionType: PageTransitionType.fade,
+        duration: Duration(milliseconds: 300),
+      );
 }
 
 class RootPageContext {
