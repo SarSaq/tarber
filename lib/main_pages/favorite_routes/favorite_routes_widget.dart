@@ -118,59 +118,59 @@ class _FavoriteRoutesWidgetState extends State<FavoriteRoutesWidget> {
             : null,
         body: SafeArea(
           top: true,
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: FutureBuilder<List<FavoriteRoutesViewRow>>(
-              future: FavoriteRoutesViewTable().queryRows(
-                queryFn: (q) => q.eqOrNull(
-                  'user_id',
-                  currentUserUid,
-                ),
+          child: FutureBuilder<List<FavoriteRoutesViewRow>>(
+            future: FavoriteRoutesViewTable().queryRows(
+              queryFn: (q) => q.eqOrNull(
+                'user_id',
+                currentUserUid,
               ),
-              builder: (context, snapshot) {
-                // Customize what your widget looks like when it's loading.
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: SizedBox(
-                      width: 50.0,
-                      height: 50.0,
-                      child: SpinKitFadingCube(
+            ),
+            builder: (context, snapshot) {
+              // Customize what your widget looks like when it's loading.
+              if (!snapshot.hasData) {
+                return Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    height: 50.0,
+                    child: SpinKitFadingCube(
+                      color: FlutterFlowTheme.of(context).secondary,
+                      size: 50.0,
+                    ),
+                  ),
+                );
+              }
+              List<FavoriteRoutesViewRow> routesFavoriteRoutesViewRowList =
+                  snapshot.data!;
+
+              if (routesFavoriteRoutesViewRowList.isEmpty) {
+                return Center(
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * 0.7,
+                    child: EmptyStateWidget(
+                      iconName: Icon(
+                        Icons.route,
                         color: FlutterFlowTheme.of(context).secondary,
-                        size: 50.0,
+                        size: 48.0,
                       ),
+                      message:
+                          'Нажмите значок маршрута на карточке рейса, чтобы отслеживать его',
+                      title: 'У вас нет отслеживаемых рейсов',
                     ),
-                  );
-                }
-                List<FavoriteRoutesViewRow> routesFavoriteRoutesViewRowList =
-                    snapshot.data!;
+                  ),
+                );
+              }
 
-                if (routesFavoriteRoutesViewRowList.isEmpty) {
-                  return Center(
-                    child: Container(
-                      width: MediaQuery.sizeOf(context).width * 0.7,
-                      child: EmptyStateWidget(
-                        iconName: Icon(
-                          Icons.route,
-                          color: FlutterFlowTheme.of(context).secondary,
-                          size: 48.0,
-                        ),
-                        message:
-                            'Нажмите значок маршрута на карточке рейса, чтобы отслеживать его',
-                        title: 'У вас нет отслеживаемых рейсов',
-                      ),
-                    ),
-                  );
-                }
-
-                return ListView.separated(
-                  padding: EdgeInsets.zero,
-                  scrollDirection: Axis.vertical,
-                  itemCount: routesFavoriteRoutesViewRowList.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 16.0),
-                  itemBuilder: (context, routesIndex) {
-                    final routesFavoriteRoutesViewRow =
-                        routesFavoriteRoutesViewRowList[routesIndex];
-                    return InkWell(
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.vertical,
+                itemCount: routesFavoriteRoutesViewRowList.length,
+                itemBuilder: (context, routesIndex) {
+                  final routesFavoriteRoutesViewRow =
+                      routesFavoriteRoutesViewRowList[routesIndex];
+                  return Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 8.0),
+                    child: InkWell(
                       splashColor: Colors.transparent,
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
@@ -208,15 +208,17 @@ class _FavoriteRoutesWidgetState extends State<FavoriteRoutesWidget> {
                               profileName:
                                   routesFavoriteRoutesViewRow.carrierName!,
                               routeId: routesFavoriteRoutesViewRow.id!,
+                              status: routesFavoriteRoutesViewRow.status!,
+                              routeDate: routesFavoriteRoutesViewRow.routeDate!,
                             ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ),

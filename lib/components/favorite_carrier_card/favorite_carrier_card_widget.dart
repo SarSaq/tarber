@@ -61,7 +61,7 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
         boxShadow: [
           BoxShadow(
-            blurRadius: 12.0,
+            blurRadius: 6.0,
             color: Color(0x33000000),
             offset: Offset(
               0.0,
@@ -185,7 +185,6 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
                   children: [
                     FlutterFlowIconButton(
                       borderRadius: 8.0,
-                      buttonSize: 40.0,
                       icon: Icon(
                         Icons.star_rounded,
                         color: FFAppState()
@@ -193,7 +192,7 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
                                 .contains(widget.carrierId)
                             ? FlutterFlowTheme.of(context).secondary
                             : FlutterFlowTheme.of(context).alternate,
-                        size: 24.0,
+                        size: 32.0,
                       ),
                       onPressed: () async {
                         if (FFAppState()

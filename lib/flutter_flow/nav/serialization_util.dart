@@ -245,8 +245,12 @@ dynamic deserializeParam<T>(
             return RoutesRow(data);
           case FavoriteCarriersRow:
             return FavoriteCarriersRow(data);
+          case FavoriteCarriersViewRow:
+            return FavoriteCarriersViewRow(data);
           case FavoriteRoutesViewRow:
             return FavoriteRoutesViewRow(data);
+          case SearchRoutesViewRow:
+            return SearchRoutesViewRow(data);
           case SubscribesRow:
             return SubscribesRow(data);
           case UsersRow:

@@ -130,7 +130,7 @@ class _AddTripWidgetState extends State<AddTripWidget> {
                             ),
                       ),
                       actions: [],
-                      centerTitle: false,
+                      centerTitle: true,
                       elevation: 0.0,
                     )
                   : null,

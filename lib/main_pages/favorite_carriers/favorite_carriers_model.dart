@@ -1,6 +1,7 @@
 import '/backend/supabase/supabase.dart';
 import '/components/favorite_carrier_card/favorite_carrier_card_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/index.dart';
 import 'favorite_carriers_widget.dart' show FavoriteCarriersWidget;
 import 'package:flutter/material.dart';
 

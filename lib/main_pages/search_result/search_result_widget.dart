@@ -119,113 +119,86 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
             : null,
         body: SafeArea(
           top: true,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: FutureBuilder<List<RoutesRow>>(
-              future: RoutesTable().queryRows(
-                queryFn: (q) => q
-                    .eqOrNull(
-                      'from',
-                      FFAppState().searchFrom,
-                    )
-                    .eqOrNull(
-                      'to',
-                      FFAppState().searchTo,
+          child: FutureBuilder<List<SearchRoutesViewRow>>(
+            future: SearchRoutesViewTable().queryRows(
+              queryFn: (q) => q
+                  .eqOrNull(
+                    'from',
+                    FFAppState().searchFrom,
+                  )
+                  .eqOrNull(
+                    'to',
+                    FFAppState().searchTo,
+                  ),
+            ),
+            builder: (context, snapshot) {
+              // Customize what your widget looks like when it's loading.
+              if (!snapshot.hasData) {
+                return Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    height: 50.0,
+                    child: SpinKitFadingCube(
+                      color: FlutterFlowTheme.of(context).secondary,
+                      size: 50.0,
                     ),
-              ),
-              builder: (context, snapshot) {
-                // Customize what your widget looks like when it's loading.
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: SizedBox(
-                      width: 50.0,
-                      height: 50.0,
-                      child: SpinKitFadingCube(
-                        color: FlutterFlowTheme.of(context).secondary,
-                        size: 50.0,
+                  ),
+                );
+              }
+              List<SearchRoutesViewRow> listViewSearchRoutesViewRowList =
+                  snapshot.data!;
+
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.vertical,
+                itemCount: listViewSearchRoutesViewRowList.length,
+                itemBuilder: (context, listViewIndex) {
+                  final listViewSearchRoutesViewRow =
+                      listViewSearchRoutesViewRowList[listViewIndex];
+                  return Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 8.0),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        context.pushNamed(
+                          RouteDetailsWidget.routeName,
+                          queryParameters: {
+                            'routeId': serializeParam(
+                              listViewSearchRoutesViewRow.id,
+                              ParamType.int,
+                            ),
+                          }.withoutNulls,
+                        );
+                      },
+                      child: wrapWithModel(
+                        model: _model.resultCardModels.getModel(
+                          listViewSearchRoutesViewRow.id!.toString(),
+                          listViewIndex,
+                        ),
+                        updateCallback: () => safeSetState(() {}),
+                        child: ResultCardWidget(
+                          key: Key(
+                            'Keyje0_${listViewSearchRoutesViewRow.id!.toString()}',
+                          ),
+                          from: listViewSearchRoutesViewRow.from!,
+                          to: listViewSearchRoutesViewRow.to!,
+                          price: listViewSearchRoutesViewRow.priceKG!,
+                          avatar: listViewSearchRoutesViewRow.carrierAvatar!,
+                          profileName: listViewSearchRoutesViewRow.carrierName!,
+                          routeId: listViewSearchRoutesViewRow.id!,
+                          status: listViewSearchRoutesViewRow.status!,
+                          routeDate: listViewSearchRoutesViewRow.routeDate!,
+                        ),
                       ),
                     ),
                   );
-                }
-                List<RoutesRow> listViewRoutesRowList = snapshot.data!;
-
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  scrollDirection: Axis.vertical,
-                  itemCount: listViewRoutesRowList.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 16.0),
-                  itemBuilder: (context, listViewIndex) {
-                    final listViewRoutesRow =
-                        listViewRoutesRowList[listViewIndex];
-                    return FutureBuilder<List<UsersRow>>(
-                      future: UsersTable().querySingleRow(
-                        queryFn: (q) => q.eqOrNull(
-                          'id',
-                          listViewRoutesRow.user,
-                        ),
-                      ),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
-                              child: SpinKitFadingCube(
-                                color: FlutterFlowTheme.of(context).secondary,
-                                size: 50.0,
-                              ),
-                            ),
-                          );
-                        }
-                        List<UsersRow> resultCardUsersRowList = snapshot.data!;
-
-                        final resultCardUsersRow =
-                            resultCardUsersRowList.isNotEmpty
-                                ? resultCardUsersRowList.first
-                                : null;
-
-                        return InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            context.pushNamed(
-                              RouteDetailsWidget.routeName,
-                              queryParameters: {
-                                'routeId': serializeParam(
-                                  listViewRoutesRow.id,
-                                  ParamType.int,
-                                ),
-                              }.withoutNulls,
-                            );
-                          },
-                          child: wrapWithModel(
-                            model: _model.resultCardModels.getModel(
-                              listViewRoutesRow.id.toString(),
-                              listViewIndex,
-                            ),
-                            updateCallback: () => safeSetState(() {}),
-                            child: ResultCardWidget(
-                              key: Key(
-                                'Keyje0_${listViewRoutesRow.id.toString()}',
-                              ),
-                              from: listViewRoutesRow.from!,
-                              to: listViewRoutesRow.to!,
-                              price: listViewRoutesRow.priceKG!,
-                              avatar: resultCardUsersRow!.avatarUrl!,
-                              profileName: resultCardUsersRow.name!,
-                              routeId: listViewRoutesRow.id,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+                },
+              );
+            },
           ),
         ),
       ),

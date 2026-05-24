@@ -8,6 +8,8 @@ export 'table.dart';
 export 'tables/cities.dart';
 export 'tables/routes.dart';
 export 'tables/favorite_carriers.dart';
+export 'tables/favorite_carriers_view.dart';
 export 'tables/favorite_routes_view.dart';
+export 'tables/search_routes_view.dart';
 export 'tables/subscribes.dart';
 export 'tables/users.dart';
