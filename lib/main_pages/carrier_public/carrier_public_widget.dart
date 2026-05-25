@@ -240,8 +240,11 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                                   Duration(milliseconds: 500),
                                               fadeOutDuration:
                                                   Duration(milliseconds: 500),
-                                              imageUrl: carrierPublicUsersRow!
-                                                  .avatarUrl!,
+                                              imageUrl: valueOrDefault<String>(
+                                                carrierPublicUsersRow
+                                                    ?.avatarUrl,
+                                                'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxhcmFyYXR8ZW58MHx8fHwxNzc5NTc2OTM0fDA&ixlib=rb-4.1.0&q=80&w=400',
+                                              ),
                                               width: 100.0,
                                               height: 100.0,
                                               fit: BoxFit.cover,
@@ -251,7 +254,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                       ),
                                       Text(
                                         valueOrDefault<String>(
-                                          carrierPublicUsersRow.name,
+                                          carrierPublicUsersRow?.name,
                                           'Имя не указано',
                                         ),
                                         style: FlutterFlowTheme.of(context)
@@ -296,7 +299,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                             AlignmentDirectional(0.0, 0.0),
                                         child: Text(
                                           valueOrDefault<String>(
-                                            carrierPublicUsersRow.role,
+                                            carrierPublicUsersRow?.role,
                                             'Пользователь',
                                           ),
                                           textAlign: TextAlign.start,
@@ -333,7 +336,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                       ),
                                       Text(
                                         valueOrDefault<String>(
-                                          carrierPublicUsersRow.phone,
+                                          carrierPublicUsersRow?.phone,
                                           'Номер не указан',
                                         ),
                                         style: FlutterFlowTheme.of(context)
@@ -629,7 +632,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                                     await launchUrl(Uri(
                                                       scheme: 'tel',
                                                       path:
-                                                          carrierPublicUsersRow
+                                                          carrierPublicUsersRow!
                                                               .phone!,
                                                     ));
                                                   },
@@ -653,8 +656,8 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (carrierPublicUsersRow.description != null &&
-                                carrierPublicUsersRow.description != '')
+                            if (carrierPublicUsersRow?.description != null &&
+                                carrierPublicUsersRow?.description != '')
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 12.0, 0.0, 0.0),
@@ -700,7 +703,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                               ),
                                         ),
                                         Text(
-                                          carrierPublicUsersRow.description!,
+                                          carrierPublicUsersRow!.description!,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyLarge
                                               .override(

@@ -11,12 +11,10 @@ class StatusBottomSheetWidget extends StatefulWidget {
   const StatusBottomSheetWidget({
     super.key,
     this.oldStatus,
-    this.newStatus,
     required this.routeId,
   });
 
   final String? oldStatus;
-  final String? newStatus;
   final int? routeId;
 
   @override
@@ -165,24 +163,19 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
               child: FFButtonWidget(
                 onPressed: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (alertDialogContext) {
-                      return AlertDialog(
-                        title: Text(widget.routeId!.toString()),
-                        content: Text(widget.newStatus!),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(alertDialogContext),
-                            child: Text('Ok'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
                   await RoutesTable().update(
                     data: {
-                      'Status': widget.newStatus,
+                      'status': () {
+                        if (widget.oldStatus == 'recruiting') {
+                          return 'closed';
+                        } else if (widget.oldStatus == 'closed') {
+                          return 'in_transit';
+                        } else if (widget.oldStatus == 'in_transit') {
+                          return 'delivered';
+                        } else {
+                          return '';
+                        }
+                      }(),
                     },
                     matchingRows: (rows) => rows.eqOrNull(
                       'id',
@@ -192,11 +185,11 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                   Navigator.pop(context);
                 },
                 text: () {
-                  if (widget.newStatus == 'closed') {
+                  if (widget.oldStatus == 'recruiting') {
                     return 'Закрыть набор';
-                  } else if (widget.newStatus == 'in_transit') {
+                  } else if (widget.oldStatus == 'closed') {
                     return 'Отправить в путь';
-                  } else if (widget.newStatus == 'delivered') {
+                  } else if (widget.oldStatus == 'in_transit') {
                     return 'Завершить рейс';
                   } else {
                     return 'Неизвестно';
@@ -213,11 +206,11 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                   iconPadding:
                       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   color: () {
-                    if (widget.newStatus == 'closed') {
+                    if (widget.oldStatus == 'recruiting') {
                       return Colors.orange;
-                    } else if (widget.newStatus == 'in_transit') {
+                    } else if (widget.oldStatus == 'closed') {
                       return Color(0xFF7E57C2);
-                    } else if (widget.newStatus == 'delivered') {
+                    } else if (widget.oldStatus == 'in_transit') {
                       return Color(0xFF2E7D32);
                     } else {
                       return FlutterFlowTheme.of(context).alternate;
@@ -253,7 +246,7 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                 onPressed: () async {
                   await RoutesTable().update(
                     data: {
-                      'Status': 'cancelled',
+                      'status': 'cancelled',
                     },
                     matchingRows: (rows) => rows.eqOrNull(
                       'id',

@@ -1439,6 +1439,7 @@ class _AddTripWidgetState extends State<AddTripWidget> {
                                       'alcohol': _model.alcohol,
                                       'routeDate':
                                           supaSerialize<DateTime>(_model.date),
+                                      'status': 'recruiting',
                                     });
                                     await showDialog(
                                       barrierColor: Color(0x80000000),

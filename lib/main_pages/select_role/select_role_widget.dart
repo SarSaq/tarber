@@ -107,8 +107,8 @@ class _SelectRoleWidgetState extends State<SelectRoleWidget> {
                             color: FlutterFlowTheme.of(context).secondaryText,
                             size: 24.0,
                           ),
-                          onPressed: () {
-                            print('IconButton pressed ...');
+                          onPressed: () async {
+                            context.safePop();
                           },
                         ),
                       ],

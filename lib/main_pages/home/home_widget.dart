@@ -798,8 +798,14 @@ class _HomeWidgetState extends State<HomeWidget> {
                           FutureBuilder<List<RoutesRow>>(
                             future: _model.tripsData(
                               requestFn: () => RoutesTable().queryRows(
-                                queryFn: (q) => q.order('created_at'),
-                                limit: 2,
+                                queryFn: (q) => q
+                                    .gtOrNull(
+                                      'routeDate',
+                                      supaSerialize<DateTime>(
+                                          getCurrentTimestamp),
+                                    )
+                                    .order('created_at'),
+                                limit: 5,
                               ),
                             ),
                             builder: (context, snapshot) {

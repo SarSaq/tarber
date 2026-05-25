@@ -1171,7 +1171,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                               );
 
                                               context.pushNamed(
-                                                SelectRoleWidget.routeName,
+                                                UserProfileWidget.routeName,
                                                 extra: <String, dynamic>{
                                                   '__transition_info__':
                                                       TransitionInfo(

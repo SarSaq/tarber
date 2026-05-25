@@ -48,8 +48,8 @@ class SearchRoutesViewRow extends SupabaseDataRow {
   bool? get medicines => getField<bool>('medicines');
   set medicines(bool? value) => setField<bool>('medicines', value);
 
-  String? get status => getField<String>('Status');
-  set status(String? value) => setField<String>('Status', value);
+  String? get status => getField<String>('status');
+  set status(String? value) => setField<String>('status', value);
 
   String? get user => getField<String>('user');
   set user(String? value) => setField<String>('user', value);
@@ -59,6 +59,9 @@ class SearchRoutesViewRow extends SupabaseDataRow {
 
   String? get carrierAvatar => getField<String>('carrier_avatar');
   set carrierAvatar(String? value) => setField<String>('carrier_avatar', value);
+
+  String? get carrierPhone => getField<String>('carrier_phone');
+  set carrierPhone(String? value) => setField<String>('carrier_phone', value);
 
   int? get sumRoutes => getField<int>('sum_routes');
   set sumRoutes(int? value) => setField<int>('sum_routes', value);

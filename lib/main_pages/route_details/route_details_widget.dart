@@ -334,7 +334,7 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                                         } else if (columnSearchRoutesViewRow
                                                 .status ==
                                             'cancelled') {
-                                          return Color(0x00000000);
+                                          return Color(0xFFD32F2F);
                                         } else {
                                           return Color(0x00000000);
                                         }
@@ -1060,32 +1060,15 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                                                       oldStatus:
                                                           columnSearchRoutesViewRow
                                                               .status,
-                                                      newStatus: () {
-                                                        if (columnSearchRoutesViewRow
-                                                                .status ==
-                                                            'recruiting') {
-                                                          return 'closed';
-                                                        } else if (columnSearchRoutesViewRow
-                                                                .status ==
-                                                            'closed') {
-                                                          return 'in_transit';
-                                                        } else if (columnSearchRoutesViewRow
-                                                                .status ==
-                                                            'in_transit') {
-                                                          return 'delivered';
-                                                        } else {
-                                                          return '';
-                                                        }
-                                                      }(),
-                                                      routeId: widget.routeId!,
+                                                      routeId:
+                                                          columnSearchRoutesViewRow
+                                                              .id!,
                                                     ),
                                                   ),
                                                 );
                                               },
                                             ).then(
                                                 (value) => safeSetState(() {}));
-
-                                            context.safePop();
                                           },
                                           text: 'Изменить статус рейса',
                                           options: FFButtonOptions(

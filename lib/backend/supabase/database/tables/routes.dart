@@ -47,8 +47,8 @@ class RoutesRow extends SupabaseDataRow {
   bool? get medicines => getField<bool>('medicines');
   set medicines(bool? value) => setField<bool>('medicines', value);
 
-  String? get status => getField<String>('Status');
-  set status(String? value) => setField<String>('Status', value);
+  String? get status => getField<String>('status');
+  set status(String? value) => setField<String>('status', value);
 
   String? get user => getField<String>('user');
   set user(String? value) => setField<String>('user', value);

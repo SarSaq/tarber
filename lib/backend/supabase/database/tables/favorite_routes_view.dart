@@ -18,6 +18,9 @@ class FavoriteRoutesViewRow extends SupabaseDataRow {
   String? get userId => getField<String>('user_id');
   set userId(String? value) => setField<String>('user_id', value);
 
+  int? get routeId => getField<int>('route_id');
+  set routeId(int? value) => setField<int>('route_id', value);
+
   int? get id => getField<int>('id');
   set id(int? value) => setField<int>('id', value);
 
@@ -51,8 +54,8 @@ class FavoriteRoutesViewRow extends SupabaseDataRow {
   bool? get medicines => getField<bool>('medicines');
   set medicines(bool? value) => setField<bool>('medicines', value);
 
-  String? get status => getField<String>('Status');
-  set status(String? value) => setField<String>('Status', value);
+  String? get status => getField<String>('status');
+  set status(String? value) => setField<String>('status', value);
 
   String? get user => getField<String>('user');
   set user(String? value) => setField<String>('user', value);
