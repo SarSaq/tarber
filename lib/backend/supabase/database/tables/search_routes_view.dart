@@ -18,9 +18,6 @@ class SearchRoutesViewRow extends SupabaseDataRow {
   int? get id => getField<int>('id');
   set id(int? value) => setField<int>('id', value);
 
-  DateTime? get createdAt => getField<DateTime>('created_at');
-  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
-
   String? get from => getField<String>('from');
   set from(String? value) => setField<String>('from', value);
 
@@ -51,17 +48,27 @@ class SearchRoutesViewRow extends SupabaseDataRow {
   String? get status => getField<String>('status');
   set status(String? value) => setField<String>('status', value);
 
+  DateTime? get createdAt => getField<DateTime>('created_at');
+  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
+
   String? get user => getField<String>('user');
   set user(String? value) => setField<String>('user', value);
 
-  String? get carrierName => getField<String>('carrier_name');
-  set carrierName(String? value) => setField<String>('carrier_name', value);
+  String? get name => getField<String>('name');
+  set name(String? value) => setField<String>('name', value);
 
-  String? get carrierAvatar => getField<String>('carrier_avatar');
-  set carrierAvatar(String? value) => setField<String>('carrier_avatar', value);
+  String? get phone => getField<String>('phone');
+  set phone(String? value) => setField<String>('phone', value);
 
-  String? get carrierPhone => getField<String>('carrier_phone');
-  set carrierPhone(String? value) => setField<String>('carrier_phone', value);
+  String? get email => getField<String>('email');
+  set email(String? value) => setField<String>('email', value);
+
+  String? get avatarUrl => getField<String>('avatar_url');
+  set avatarUrl(String? value) => setField<String>('avatar_url', value);
+
+  String? get userDescription => getField<String>('user_description');
+  set userDescription(String? value) =>
+      setField<String>('user_description', value);
 
   int? get sumRoutes => getField<int>('sum_routes');
   set sumRoutes(int? value) => setField<int>('sum_routes', value);

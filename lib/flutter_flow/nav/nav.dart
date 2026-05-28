@@ -159,8 +159,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: CarrierPublicWidget.routeName,
           path: CarrierPublicWidget.routePath,
           builder: (context, params) => CarrierPublicWidget(
-            carrierID: params.getParam(
-              'carrierID',
+            carrierId: params.getParam(
+              'carrierId',
               ParamType.String,
             ),
           ),

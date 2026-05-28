@@ -2,7 +2,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -225,7 +224,7 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                                 } else if (widget.status == 'delivered') {
                                   return Color(0xFF2E7D32);
                                 } else if (widget.status == 'cancelled') {
-                                  return Color(0x00000000);
+                                  return FlutterFlowTheme.of(context).accent3;
                                 } else {
                                   return Color(0x00000000);
                                 }
@@ -353,7 +352,7 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                             Text(
                               valueOrDefault<String>(
                                 widget.price?.toString(),
-                                '100',
+                                '0',
                               ),
                               style: FlutterFlowTheme.of(context)
                                   .labelLarge
@@ -430,17 +429,18 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(2.0),
-                      child: CachedNetworkImage(
-                        fadeInDuration: Duration(milliseconds: 500),
-                        fadeOutDuration: Duration(milliseconds: 500),
-                        imageUrl: widget.avatar != null && widget.avatar != ''
-                            ? widget.avatar!
-                            : random_data.randomImageUrl(
-                                0,
-                                0,
-                              ),
-                        fit: BoxFit.cover,
-                        alignment: Alignment(0.0, 0.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24.0),
+                        child: CachedNetworkImage(
+                          fadeInDuration: Duration(milliseconds: 500),
+                          fadeOutDuration: Duration(milliseconds: 500),
+                          imageUrl: valueOrDefault<String>(
+                            widget.avatar,
+                            'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxhcmFyYXR8ZW58MHx8fHwxNzc5NzM4MzYyfDA&ixlib=rb-4.1.0&q=80&w=400',
+                          ),
+                          fit: BoxFit.cover,
+                          alignment: Alignment(0.0, 0.0),
+                        ),
                       ),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import '/auth/supabase_auth/auth_util.dart';
 import '/backend/supabase/supabase.dart';
+import '/components/empty_state/empty_state_widget.dart';
 import '/components/result_card/result_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -129,6 +130,14 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                   .eqOrNull(
                     'to',
                     FFAppState().searchTo,
+                  )
+                  .neqOrNull(
+                    'status',
+                    'cancelled',
+                  )
+                  .neqOrNull(
+                    'status',
+                    'delivered',
                   ),
             ),
             builder: (context, snapshot) {
@@ -148,6 +157,19 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
               List<SearchRoutesViewRow> listViewSearchRoutesViewRowList =
                   snapshot.data!;
 
+              if (listViewSearchRoutesViewRowList.isEmpty) {
+                return Center(
+                  child: EmptyStateWidget(
+                    iconName: Icon(
+                      Icons.route,
+                      size: 24.0,
+                    ),
+                    message: '',
+                    title: '',
+                  ),
+                );
+              }
+
               return ListView.builder(
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
@@ -164,6 +186,9 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        if (Navigator.of(context).canPop()) {
+                          context.pop();
+                        }
                         context.pushNamed(
                           RouteDetailsWidget.routeName,
                           queryParameters: {
@@ -174,25 +199,17 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                           }.withoutNulls,
                         );
                       },
-                      child: wrapWithModel(
-                        model: _model.resultCardModels.getModel(
-                          listViewSearchRoutesViewRow.id!.toString(),
-                          listViewIndex,
-                        ),
-                        updateCallback: () => safeSetState(() {}),
-                        child: ResultCardWidget(
-                          key: Key(
-                            'Keyje0_${listViewSearchRoutesViewRow.id!.toString()}',
-                          ),
-                          from: listViewSearchRoutesViewRow.from!,
-                          to: listViewSearchRoutesViewRow.to!,
-                          price: listViewSearchRoutesViewRow.priceKG!,
-                          avatar: listViewSearchRoutesViewRow.carrierAvatar!,
-                          profileName: listViewSearchRoutesViewRow.carrierName!,
-                          routeId: listViewSearchRoutesViewRow.id!,
-                          status: listViewSearchRoutesViewRow.status!,
-                          routeDate: listViewSearchRoutesViewRow.routeDate!,
-                        ),
+                      child: ResultCardWidget(
+                        key: Key(
+                            'Keyje0_${listViewIndex}_of_${listViewSearchRoutesViewRowList.length}'),
+                        from: listViewSearchRoutesViewRow.from!,
+                        to: listViewSearchRoutesViewRow.to!,
+                        price: listViewSearchRoutesViewRow.priceKG!,
+                        avatar: listViewSearchRoutesViewRow.avatarUrl!,
+                        profileName: listViewSearchRoutesViewRow.name!,
+                        routeId: listViewSearchRoutesViewRow.id!,
+                        status: listViewSearchRoutesViewRow.status!,
+                        routeDate: listViewSearchRoutesViewRow.routeDate!,
                       ),
                     ),
                   );

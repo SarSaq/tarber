@@ -18,10 +18,10 @@ export 'carrier_public_model.dart';
 class CarrierPublicWidget extends StatefulWidget {
   const CarrierPublicWidget({
     super.key,
-    this.carrierID,
+    this.carrierId,
   });
 
-  final String? carrierID;
+  final String? carrierId;
 
   static String routeName = 'carrier_public';
   static String routePath = '/carrierPublic';
@@ -45,7 +45,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
       _model.carrierAllTrips = await RoutesTable().queryRows(
         queryFn: (q) => q.eqOrNull(
           'user',
-          widget.carrierID,
+          widget.carrierId,
         ),
       );
       _model.carrierFavorites = await FavoriteCarriersTable().queryRows(
@@ -81,7 +81,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
       future: UsersTable().querySingleRow(
         queryFn: (q) => q.eqOrNull(
           'id',
-          widget.carrierID,
+          widget.carrierId,
         ),
       ),
       builder: (context, snapshot) {
@@ -131,7 +131,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                         borderWidth: 1.0,
                         buttonSize: 54.0,
                         icon: Icon(
-                          Icons.arrow_back_rounded,
+                          Icons.close_rounded,
                           color: FlutterFlowTheme.of(context).secondaryText,
                           size: 24.0,
                         ),
@@ -147,7 +147,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                             Icons.star_rounded,
                             color: FFAppState()
                                     .userFavoriteCarrierIds
-                                    .contains(widget.carrierID)
+                                    .contains(widget.carrierId)
                                 ? FlutterFlowTheme.of(context).secondary
                                 : FlutterFlowTheme.of(context).alternate,
                             size: 32.0,
@@ -155,19 +155,19 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                           onPressed: () async {
                             if (FFAppState()
                                 .userFavoriteCarrierIds
-                                .contains(widget.carrierID)) {
+                                .contains(widget.carrierId)) {
                               await actions.removeCarrierFromFavorites(
-                                widget.carrierID!,
+                                widget.carrierId!,
                               );
                               FFAppState().removeFromUserFavoriteCarrierIds(
-                                  widget.carrierID!);
+                                  widget.carrierId!);
                               FFAppState().update(() {});
                             } else {
                               await actions.addCarrierToFavorites(
-                                widget.carrierID!,
+                                widget.carrierId!,
                               );
                               FFAppState().addToUserFavoriteCarrierIds(
-                                  widget.carrierID!);
+                                  widget.carrierId!);
                               FFAppState().update(() {});
                             }
                           },
@@ -791,7 +791,7 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                             queryFn: (q) => q
                                                 .eqOrNull(
                                                   'user',
-                                                  widget.carrierID,
+                                                  widget.carrierId,
                                                 )
                                                 .gteOrNull(
                                                   'routeDate',
@@ -1021,64 +1021,98 @@ class _CarrierPublicWidgetState extends State<CarrierPublicWidget> {
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          8.0,
-                                                                          0.0),
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(12.0),
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              MediaQuery.sizeOf(context).width * 0.3,
-                                                                          height:
-                                                                              20.0,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).accent2,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(12.0),
-                                                                            shape:
-                                                                                BoxShape.rectangle,
-                                                                            border:
-                                                                                Border.all(
-                                                                              color: FlutterFlowTheme.of(context).alternate,
-                                                                              width: 0.5,
-                                                                            ),
-                                                                          ),
-                                                                          alignment: AlignmentDirectional(
-                                                                              0.0,
-                                                                              0.0),
-                                                                          child:
-                                                                              Text(
-                                                                            'Статус',
-                                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
-                                                                                  font: GoogleFonts.roboto(
-                                                                                    fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                                  ),
-                                                                                  letterSpacing: 0.0,
-                                                                                  fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: () {
+                                                                      if (listViewRoutesRow
+                                                                              .status ==
+                                                                          'recruiting') {
+                                                                        return Color(
+                                                                            0xFF1B4FD8);
+                                                                      } else if (listViewRoutesRow
+                                                                              .status ==
+                                                                          'closed') {
+                                                                        return Colors
+                                                                            .orange;
+                                                                      } else if (listViewRoutesRow
+                                                                              .status ==
+                                                                          'in_transit') {
+                                                                        return Color(
+                                                                            0xFF7E57C2);
+                                                                      } else if (listViewRoutesRow
+                                                                              .status ==
+                                                                          'delivered') {
+                                                                        return Color(
+                                                                            0xFF2E7D32);
+                                                                      } else if (listViewRoutesRow
+                                                                              .status ==
+                                                                          'cancelled') {
+                                                                        return FlutterFlowTheme.of(context)
+                                                                            .accent3;
+                                                                      } else {
+                                                                        return Color(
+                                                                            0x00000000);
+                                                                      }
+                                                                    }(),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            24.0),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            8.0,
+                                                                            4.0,
+                                                                            8.0,
+                                                                            4.0),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children:
+                                                                          [
+                                                                        Text(
+                                                                          () {
+                                                                            if (listViewRoutesRow.status ==
+                                                                                'recruiting') {
+                                                                              return 'Набор груза';
+                                                                            } else if (listViewRoutesRow.status ==
+                                                                                'closed') {
+                                                                              return 'Набор закрыт';
+                                                                            } else if (listViewRoutesRow.status ==
+                                                                                'in_transit') {
+                                                                              return 'В пути';
+                                                                            } else if (listViewRoutesRow.status ==
+                                                                                'delivered') {
+                                                                              return 'Завершён';
+                                                                            } else if (listViewRoutesRow.status ==
+                                                                                'cancelled') {
+                                                                              return 'Отменён';
+                                                                            } else {
+                                                                              return 'Неизвестно';
+                                                                            }
+                                                                          }(),
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .labelMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.roboto(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelMedium.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
                                                                                 ),
-                                                                          ),
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).labelMedium.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                              ),
                                                                         ),
-                                                                      ),
+                                                                      ].divide(SizedBox(
+                                                                              width: 4.0)),
                                                                     ),
-                                                                  ],
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),

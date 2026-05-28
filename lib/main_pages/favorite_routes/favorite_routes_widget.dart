@@ -180,7 +180,7 @@ class _FavoriteRoutesWidgetState extends State<FavoriteRoutesWidget> {
                           RouteDetailsWidget.routeName,
                           queryParameters: {
                             'routeId': serializeParam(
-                              routesFavoriteRoutesViewRow.id,
+                              routesFavoriteRoutesViewRow.routeId,
                               ParamType.int,
                             ),
                           }.withoutNulls,
@@ -192,22 +192,23 @@ class _FavoriteRoutesWidgetState extends State<FavoriteRoutesWidget> {
                           decoration: BoxDecoration(),
                           child: wrapWithModel(
                             model: _model.resultCardModels.getModel(
-                              routesFavoriteRoutesViewRow.id!.toString(),
+                              routesFavoriteRoutesViewRow.userId!,
                               routesIndex,
                             ),
                             updateCallback: () => safeSetState(() {}),
                             child: ResultCardWidget(
                               key: Key(
-                                'Keygz9_${routesFavoriteRoutesViewRow.id!.toString()}',
+                                'Keygz9_${routesFavoriteRoutesViewRow.userId!}',
                               ),
                               from: routesFavoriteRoutesViewRow.from!,
                               to: routesFavoriteRoutesViewRow.to!,
                               price: routesFavoriteRoutesViewRow.priceKG!,
-                              avatar:
-                                  routesFavoriteRoutesViewRow.carrierAvatar!,
-                              profileName:
-                                  routesFavoriteRoutesViewRow.carrierName!,
-                              routeId: routesFavoriteRoutesViewRow.id!,
+                              avatar: valueOrDefault<String>(
+                                routesFavoriteRoutesViewRow.avatarUrl,
+                                'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxtYXNpc3xlbnwwfHx8fDE3Nzk2NTcyNzl8MA&ixlib=rb-4.1.0&q=80&w=400',
+                              ),
+                              profileName: routesFavoriteRoutesViewRow.name!,
+                              routeId: routesFavoriteRoutesViewRow.routeId!,
                               status: routesFavoriteRoutesViewRow.status!,
                               routeDate: routesFavoriteRoutesViewRow.routeDate!,
                             ),

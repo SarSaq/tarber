@@ -15,17 +15,22 @@ class FavoriteRoutesViewRow extends SupabaseDataRow {
   @override
   SupabaseTable get table => FavoriteRoutesViewTable();
 
+  int? get subscribeId => getField<int>('subscribe_id');
+  set subscribeId(int? value) => setField<int>('subscribe_id', value);
+
   String? get userId => getField<String>('user_id');
   set userId(String? value) => setField<String>('user_id', value);
 
   int? get routeId => getField<int>('route_id');
   set routeId(int? value) => setField<int>('route_id', value);
 
-  int? get id => getField<int>('id');
-  set id(int? value) => setField<int>('id', value);
+  DateTime? get subscribeCreatedAt =>
+      getField<DateTime>('subscribe_created_at');
+  set subscribeCreatedAt(DateTime? value) =>
+      setField<DateTime>('subscribe_created_at', value);
 
-  DateTime? get createdAt => getField<DateTime>('created_at');
-  set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
+  int? get routeIdInternal => getField<int>('route_id_internal');
+  set routeIdInternal(int? value) => setField<int>('route_id_internal', value);
 
   String? get from => getField<String>('from');
   set from(String? value) => setField<String>('from', value);
@@ -42,27 +47,18 @@ class FavoriteRoutesViewRow extends SupabaseDataRow {
   String? get description => getField<String>('description');
   set description(String? value) => setField<String>('description', value);
 
-  bool? get foods => getField<bool>('foods');
-  set foods(bool? value) => setField<bool>('foods', value);
-
-  bool? get alcohol => getField<bool>('alcohol');
-  set alcohol(bool? value) => setField<bool>('alcohol', value);
-
-  bool? get electronics => getField<bool>('electronics');
-  set electronics(bool? value) => setField<bool>('electronics', value);
-
-  bool? get medicines => getField<bool>('medicines');
-  set medicines(bool? value) => setField<bool>('medicines', value);
-
   String? get status => getField<String>('status');
   set status(String? value) => setField<String>('status', value);
 
-  String? get user => getField<String>('user');
-  set user(String? value) => setField<String>('user', value);
+  String? get routeOwnerId => getField<String>('route_owner_id');
+  set routeOwnerId(String? value) => setField<String>('route_owner_id', value);
 
-  String? get carrierName => getField<String>('carrier_name');
-  set carrierName(String? value) => setField<String>('carrier_name', value);
+  String? get name => getField<String>('name');
+  set name(String? value) => setField<String>('name', value);
 
-  String? get carrierAvatar => getField<String>('carrier_avatar');
-  set carrierAvatar(String? value) => setField<String>('carrier_avatar', value);
+  String? get phone => getField<String>('phone');
+  set phone(String? value) => setField<String>('phone', value);
+
+  String? get avatarUrl => getField<String>('avatar_url');
+  set avatarUrl(String? value) => setField<String>('avatar_url', value);
 }

@@ -804,6 +804,14 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       supaSerialize<DateTime>(
                                           getCurrentTimestamp),
                                     )
+                                    .neqOrNull(
+                                      'status',
+                                      'delivered',
+                                    )
+                                    .neqOrNull(
+                                      'status',
+                                      'cancelled',
+                                    )
                                     .order('created_at'),
                                 limit: 5,
                               ),

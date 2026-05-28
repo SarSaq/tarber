@@ -2,6 +2,7 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'status_bottom_sheet_model.dart';
@@ -183,6 +184,18 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                     ),
                   );
                   Navigator.pop(context);
+                  if (Navigator.of(context).canPop()) {
+                    context.pop();
+                  }
+                  context.pushNamed(
+                    RouteDetailsWidget.routeName,
+                    queryParameters: {
+                      'routeId': serializeParam(
+                        widget.routeId,
+                        ParamType.int,
+                      ),
+                    }.withoutNulls,
+                  );
                 },
                 text: () {
                   if (widget.oldStatus == 'recruiting') {
@@ -254,6 +267,18 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                     ),
                   );
                   Navigator.pop(context);
+                  if (Navigator.of(context).canPop()) {
+                    context.pop();
+                  }
+                  context.pushNamed(
+                    RouteDetailsWidget.routeName,
+                    queryParameters: {
+                      'routeId': serializeParam(
+                        widget.routeId,
+                        ParamType.int,
+                      ),
+                    }.withoutNulls,
+                  );
                 },
                 text: 'Отменить рейс',
                 icon: Icon(

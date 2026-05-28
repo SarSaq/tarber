@@ -183,7 +183,7 @@ class _FavoriteCarriersWidgetState extends State<FavoriteCarriersWidget> {
                           context.pushNamed(
                             CarrierPublicWidget.routeName,
                             queryParameters: {
-                              'carrierID': serializeParam(
+                              'carrierId': serializeParam(
                                 carriersFavoriteCarriersViewRow.carrierId,
                                 ParamType.String,
                               ),
@@ -207,10 +207,14 @@ class _FavoriteCarriersWidgetState extends State<FavoriteCarriersWidget> {
                               ),
                               sumRoutes:
                                   carriersFavoriteCarriersViewRow.sumRoutes!,
-                              avatar: carriersFavoriteCarriersViewRow
-                                  .carrierAvatar!,
-                              carrierName:
-                                  carriersFavoriteCarriersViewRow.carrierName!,
+                              avatar: valueOrDefault<String>(
+                                carriersFavoriteCarriersViewRow.avatarUrl,
+                                'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxtYXNpc3xlbnwwfHx8fDE3Nzk2NTcyNzl8MA&ixlib=rb-4.1.0&q=80&w=400',
+                              ),
+                              carrierName: valueOrDefault<String>(
+                                carriersFavoriteCarriersViewRow.name,
+                                'Ararat Masisyan',
+                              ),
                               carrierId:
                                   carriersFavoriteCarriersViewRow.carrierId,
                             ),

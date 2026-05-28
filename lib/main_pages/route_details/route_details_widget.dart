@@ -334,7 +334,8 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                                         } else if (columnSearchRoutesViewRow
                                                 .status ==
                                             'cancelled') {
-                                          return Color(0xFFD32F2F);
+                                          return FlutterFlowTheme.of(context)
+                                              .accent3;
                                         } else {
                                           return Color(0x00000000);
                                         }
@@ -1137,7 +1138,7 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                               context.pushNamed(
                                 CarrierPublicWidget.routeName,
                                 queryParameters: {
-                                  'carrierID': serializeParam(
+                                  'carrierId': serializeParam(
                                     columnSearchRoutesViewRow.user,
                                     ParamType.String,
                                   ),
@@ -1194,7 +1195,7 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                                                   imageUrl:
                                                       valueOrDefault<String>(
                                                     columnSearchRoutesViewRow
-                                                        .carrierAvatar,
+                                                        .avatarUrl,
                                                     'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxtYXNpc3xlbnwwfHx8fDE3Nzk2NTcyNzl8MA&ixlib=rb-4.1.0&q=80&w=400',
                                                   ),
                                                   fit: BoxFit.cover,
@@ -1264,7 +1265,7 @@ class _RouteDetailsWidgetState extends State<RouteDetailsWidget> {
                                                     Text(
                                                       valueOrDefault<String>(
                                                         columnSearchRoutesViewRow
-                                                            .carrierName,
+                                                            .name,
                                                         'Ararat Masisyan',
                                                       ),
                                                       maxLines: 1,
