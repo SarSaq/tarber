@@ -61,4 +61,7 @@ class FavoriteRoutesViewRow extends SupabaseDataRow {
 
   String? get avatarUrl => getField<String>('avatar_url');
   set avatarUrl(String? value) => setField<String>('avatar_url', value);
+
+  int? get sumRoutes => getField<int>('sum_routes');
+  set sumRoutes(int? value) => setField<int>('sum_routes', value);
 }

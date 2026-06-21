@@ -27,7 +27,7 @@ class FavoriteRoutesModel extends FlutterFlowModel<FavoriteRoutesWidget> {
   List<SubscribesRow>? userSubscribes;
   // Stores action output result for [Backend Call - Query Rows] action in favorite_routes widget.
   List<FavoriteCarriersRow>? userCarrierFavorites;
-  // Models for result_Card dynamic component.
+  // Models for result_card dynamic component.
   late FlutterFlowDynamicModels<ResultCardModel> resultCardModels;
 
   @override

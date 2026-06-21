@@ -70,6 +70,9 @@ class SearchRoutesViewRow extends SupabaseDataRow {
   set userDescription(String? value) =>
       setField<String>('user_description', value);
 
+  int? get sumSubscribes => getField<int>('sum_subscribes');
+  set sumSubscribes(int? value) => setField<int>('sum_subscribes', value);
+
   int? get sumRoutes => getField<int>('sum_routes');
   set sumRoutes(int? value) => setField<int>('sum_routes', value);
 }

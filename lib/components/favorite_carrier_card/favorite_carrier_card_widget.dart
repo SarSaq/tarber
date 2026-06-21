@@ -59,17 +59,7 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
     return Container(
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 6.0,
-            color: Color(0x33000000),
-            offset: Offset(
-              0.0,
-              0.0,
-            ),
-          )
-        ],
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(18.0),
       ),
       child: Padding(
         padding: EdgeInsets.all(16.0),
@@ -78,104 +68,166 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
-                  child: ClipOval(
-                    child: Container(
-                      width: 50.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: FlutterFlowTheme.of(context).secondary,
-                          width: 1.0,
-                        ),
+                ClipOval(
+                  child: Container(
+                    width: 48.0,
+                    height: 48.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: FlutterFlowTheme.of(context).secondary,
                       ),
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24.0),
-                          child: CachedNetworkImage(
-                            fadeInDuration: Duration(milliseconds: 500),
-                            fadeOutDuration: Duration(milliseconds: 500),
-                            imageUrl: widget.avatar!,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            alignment: Alignment(0.0, 0.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24.0),
+                        child: CachedNetworkImage(
+                          fadeInDuration: Duration(milliseconds: 500),
+                          fadeOutDuration: Duration(milliseconds: 500),
+                          imageUrl: valueOrDefault<String>(
+                            widget.avatar,
+                            'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxhcmFyYXR8ZW58MHx8fHwxNzgwMjQ3Njg3fDA&ixlib=rb-4.1.0&q=80&w=400',
                           ),
+                          fit: BoxFit.cover,
+                          alignment: Alignment(0.0, 0.0),
                         ),
                       ),
                     ),
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        valueOrDefault<String>(
-                          widget.carrierName,
-                          'transporter',
-                        ),
-                        style: FlutterFlowTheme.of(context).titleSmall.override(
-                              font: GoogleFonts.roboto(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .fontStyle,
-                              ),
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .fontStyle,
-                            ),
-                      ),
                       Row(
-                        mainAxisSize: MainAxisSize.max,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.local_shipping_outlined,
-                            color: FlutterFlowTheme.of(context).alternate,
-                            size: 24.0,
-                          ),
                           Text(
-                            '${widget.sumRoutes?.toString()} рейсов',
+                            valueOrDefault<String>(
+                              widget.carrierName,
+                              'Ararat Masisyan',
+                            ),
+                            maxLines: 1,
                             style: FlutterFlowTheme.of(context)
-                                .labelMedium
+                                .titleSmall
                                 .override(
                                   font: GoogleFonts.roboto(
                                     fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
+                                        .titleSmall
                                         .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
+                                        .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: FlutterFlowTheme.of(context).alternate,
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
-                                      .labelMedium
+                                      .titleSmall
                                       .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
+                                      .titleSmall
                                       .fontStyle,
+                                  lineHeight: 1.35,
                                 ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ].divide(SizedBox(width: 8.0)),
+                          Icon(
+                            Icons.verified_rounded,
+                            color: FlutterFlowTheme.of(context).secondary,
+                            size: 16.0,
+                          ),
+                        ].divide(SizedBox(width: 4.0)),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.star_rounded,
+                                color: FlutterFlowTheme.of(context).warning,
+                                size: 20.0,
+                              ),
+                              Text(
+                                '5.0',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontStyle,
+                                      lineHeight: 1.38,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 4.0)),
+                          ),
+                          Icon(
+                            Icons.circle_sharp,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 6.0,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.local_shipping_outlined,
+                                color: FlutterFlowTheme.of(context).alternate,
+                                size: 20.0,
+                              ),
+                              Text(
+                                widget.sumRoutes!.toString(),
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .alternate,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontStyle,
+                                      lineHeight: 1.27,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 4.0)),
+                          ),
+                        ].divide(SizedBox(width: 6.0)),
                       ),
                     ].divide(SizedBox(height: 4.0)),
                   ),
@@ -216,7 +268,7 @@ class _FavoriteCarrierCardWidgetState extends State<FavoriteCarrierCardWidget> {
                     ),
                   ],
                 ),
-              ],
+              ].divide(SizedBox(width: 16.0)),
             ),
           ],
         ),

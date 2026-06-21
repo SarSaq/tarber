@@ -1,4 +1,5 @@
 import '/backend/supabase/supabase.dart';
+import '/components/result_card/result_card_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'search_result_widget.dart' show SearchResultWidget;
@@ -9,10 +10,16 @@ class SearchResultModel extends FlutterFlowModel<SearchResultWidget> {
 
   // Stores action output result for [Backend Call - Query Rows] action in search_result widget.
   List<SubscribesRow>? userSubscribes;
+  // Models for result_card dynamic component.
+  late FlutterFlowDynamicModels<ResultCardModel> resultCardModels;
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    resultCardModels = FlutterFlowDynamicModels(() => ResultCardModel());
+  }
 
   @override
-  void dispose() {}
+  void dispose() {
+    resultCardModels.dispose();
+  }
 }

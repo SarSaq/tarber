@@ -15,21 +15,23 @@ class ResultCardWidget extends StatefulWidget {
     required this.from,
     required this.to,
     required this.price,
-    required this.avatar,
     required this.profileName,
     required this.routeId,
     required this.status,
     required this.routeDate,
-  });
+    required this.avatar,
+    int? sumRoutes,
+  }) : this.sumRoutes = sumRoutes ?? 0;
 
   final String? from;
   final String? to;
   final int? price;
-  final String? avatar;
   final String? profileName;
   final int? routeId;
   final String? status;
   final DateTime? routeDate;
+  final String? avatar;
+  final int sumRoutes;
 
   @override
   State<ResultCardWidget> createState() => _ResultCardWidgetState();
@@ -91,268 +93,37 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.calendar_month_rounded,
-                                color: FlutterFlowTheme.of(context).secondary,
-                                size: 24.0,
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    6.0, 0.0, 0.0, 0.0),
-                                child: Text(
-                                  dateTimeFormat(
-                                    "d MMMM",
-                                    widget.routeDate,
-                                    locale: FFLocalizations.of(context)
-                                        .languageCode,
-                                  ).maybeHandleOverflow(
-                                    maxChars: 20,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelLarge
-                                      .override(
-                                        font: GoogleFonts.roboto(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .fontStyle,
-                                      ),
-                                ),
-                              ),
-                            ],
+                          Icon(
+                            Icons.calendar_month_rounded,
+                            color: FlutterFlowTheme.of(context).secondary,
+                            size: 24.0,
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                '${widget.from}',
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineSmall
-                                    .override(
-                                      font: GoogleFonts.roboto(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .headlineSmall
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .headlineSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineSmall
-                                          .fontStyle,
-                                    ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    8.0, 0.0, 8.0, 0.0),
-                                child: Icon(
-                                  Icons.arrow_right_alt,
-                                  color: FlutterFlowTheme.of(context).secondary,
-                                  size: 24.0,
-                                ),
-                              ),
-                              Text(
-                                '${widget.to}',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleLarge
-                                    .override(
-                                      font: GoogleFonts.roboto(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .titleLarge
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleLarge
-                                            .fontStyle,
-                                      ),
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: () {
-                                if (widget.status == 'recruiting') {
-                                  return Color(0xFF1B4FD8);
-                                } else if (widget.status == 'closed') {
-                                  return Colors.orange;
-                                } else if (widget.status == 'in_transit') {
-                                  return Color(0xFF7E57C2);
-                                } else if (widget.status == 'delivered') {
-                                  return Color(0xFF2E7D32);
-                                } else if (widget.status == 'cancelled') {
-                                  return FlutterFlowTheme.of(context).accent3;
-                                } else {
-                                  return Color(0x00000000);
-                                }
-                              }(),
-                              borderRadius: BorderRadius.circular(24.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 4.0, 8.0, 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    () {
-                                      if (widget.status == 'recruiting') {
-                                        return 'Набор груза';
-                                      } else if (widget.status == 'closed') {
-                                        return 'Набор закрыт';
-                                      } else if (widget.status ==
-                                          'in_transit') {
-                                        return 'В пути';
-                                      } else if (widget.status ==
-                                          'delivered') {
-                                        return 'Завершён';
-                                      } else if (widget.status ==
-                                          'cancelled') {
-                                        return 'Отменён';
-                                      } else {
-                                        return 'Неизвестно';
-                                      }
-                                    }(),
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                          font: GoogleFonts.roboto(
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ].divide(SizedBox(width: 4.0)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            if (FFAppState()
-                                    .userFavoriteID
-                                    .contains(widget.routeId) ==
-                                false)
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: FlutterFlowIconButton(
-                                  borderRadius: 24.0,
-                                  buttonSize: 40.0,
-                                  icon: Icon(
-                                    Icons.route,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                  ),
-                                  onPressed: () async {
-                                    FFAppState()
-                                        .addToUserFavoriteID(widget.routeId!);
-                                    FFAppState().update(() {});
-                                    await actions.addToFavorites(
-                                      widget.routeId!,
-                                    );
-                                  },
-                                ),
-                              ),
-                            if (FFAppState()
-                                    .userFavoriteID
-                                    .contains(widget.routeId) ==
-                                true)
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: FlutterFlowIconButton(
-                                  borderRadius: 24.0,
-                                  buttonSize: 40.0,
-                                  icon: Icon(
-                                    Icons.delete_outlined,
-                                    color: FlutterFlowTheme.of(context).error,
-                                  ),
-                                  onPressed: () async {
-                                    FFAppState().removeFromUserFavoriteID(
-                                        widget.routeId!);
-                                    FFAppState().update(() {});
-                                    await actions.removeFromFavorites(
-                                      widget.routeId!,
-                                    );
-                                  },
-                                ),
-                              ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              valueOrDefault<String>(
-                                widget.price?.toString(),
-                                '0',
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                6.0, 0.0, 0.0, 0.0),
+                            child: Text(
+                              dateTimeFormat(
+                                "d MMMM",
+                                widget.routeDate,
+                                locale:
+                                    FFLocalizations.of(context).languageCode,
+                              ).maybeHandleOverflow(
+                                maxChars: 20,
                               ),
                               style: FlutterFlowTheme.of(context)
                                   .labelLarge
@@ -372,40 +143,295 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .fontStyle,
-                                    lineHeight: 1.35,
                                   ),
                             ),
-                            Text(
-                              'цена за кг',
-                              style: FlutterFlowTheme.of(context)
-                                  .labelSmall
-                                  .override(
-                                    font: GoogleFonts.roboto(
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            valueOrDefault<String>(
+                              widget.from,
+                              'from',
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .headlineSmall
+                                .override(
+                                  font: GoogleFonts.roboto(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .headlineSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .headlineSmall
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .fontStyle,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                8.0, 0.0, 8.0, 0.0),
+                            child: Icon(
+                              Icons.arrow_right_alt,
+                              color: FlutterFlowTheme.of(context).secondary,
+                              size: 24.0,
+                            ),
+                          ),
+                          Text(
+                            valueOrDefault<String>(
+                              widget.to,
+                              'to',
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .override(
+                                  font: GoogleFonts.roboto(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .fontStyle,
+                                ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: () {
+                            if (widget.status == 'recruiting') {
+                              return Color(0xFF1B4FD8);
+                            } else if (widget.status == 'closed') {
+                              return Colors.orange;
+                            } else if (widget.status == 'in_transit') {
+                              return Color(0xFF7E57C2);
+                            } else if (widget.status == 'delivered') {
+                              return Color(0xFF2E7D32);
+                            } else if (widget.status == 'cancelled') {
+                              return FlutterFlowTheme.of(context).accent3;
+                            } else {
+                              return Color(0x00000000);
+                            }
+                          }(),
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 4.0, 8.0, 4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                () {
+                                  if (widget.status == 'recruiting') {
+                                    return 'Набор груза';
+                                  } else if (widget.status == 'closed') {
+                                    return 'Набор закрыт';
+                                  } else if (widget.status == 'in_transit') {
+                                    return 'В пути';
+                                  } else if (widget.status == 'delivered') {
+                                    return 'Завершён';
+                                  } else if (widget.status == 'cancelled') {
+                                    return 'Отменён';
+                                  } else {
+                                    return 'Неизвестно';
+                                  }
+                                }(),
+                                style: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .fontStyle,
+                                      ),
+                                      letterSpacing: 0.0,
                                       fontWeight: FlutterFlowTheme.of(context)
-                                          .labelSmall
+                                          .labelMedium
                                           .fontWeight,
                                       fontStyle: FlutterFlowTheme.of(context)
-                                          .labelSmall
+                                          .labelMedium
                                           .fontStyle,
                                     ),
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
+                              ),
+                            ].divide(SizedBox(width: 4.0)),
+                          ),
+                        ),
+                      ),
+                    ].divide(SizedBox(height: 4.0)),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (FFAppState()
+                                  .userFavoriteID
+                                  .contains(widget.routeId) ==
+                              false)
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: FlutterFlowIconButton(
+                                borderRadius: 24.0,
+                                buttonSize: 40.0,
+                                icon: Icon(
+                                  Icons.route,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                ),
+                                onPressed: () async {
+                                  FFAppState()
+                                      .addToUserFavoriteID(widget.routeId!);
+                                  FFAppState().update(() {});
+                                  await actions.addToFavorites(
+                                    widget.routeId!,
+                                  );
+                                },
+                              ),
+                            ),
+                          if (FFAppState()
+                                  .userFavoriteID
+                                  .contains(widget.routeId) ==
+                              true)
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: FlutterFlowIconButton(
+                                borderRadius: 24.0,
+                                buttonSize: 40.0,
+                                icon: Icon(
+                                  Icons.delete_outlined,
+                                  color: FlutterFlowTheme.of(context).error,
+                                ),
+                                onPressed: () async {
+                                  FFAppState().removeFromUserFavoriteID(
+                                      widget.routeId!);
+                                  FFAppState().update(() {});
+                                  await actions.removeFromFavorites(
+                                    widget.routeId!,
+                                  );
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                valueOrDefault<String>(
+                                  widget.price?.toString(),
+                                  '0',
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .titleMedium
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .fontStyle,
+                                      lineHeight: 1.35,
+                                    ),
+                              ),
+                              Text(
+                                'руб',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelLarge
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelLarge
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelLarge
+                                            .fontStyle,
+                                      ),
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelLarge
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelLarge
+                                          .fontStyle,
+                                      lineHeight: 1.35,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 6.0)),
+                          ),
+                          Text(
+                            'цена за кг',
+                            style: FlutterFlowTheme.of(context)
+                                .labelSmall
+                                .override(
+                                  font: GoogleFonts.roboto(
                                     fontWeight: FlutterFlowTheme.of(context)
                                         .labelSmall
                                         .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .labelSmall
                                         .fontStyle,
-                                    lineHeight: 1.27,
                                   ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .labelSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .labelSmall
+                                      .fontStyle,
+                                  lineHeight: 1.27,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             Divider(
@@ -413,7 +439,7 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
               color: Color(0x33FFFFFF),
             ),
             Row(
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -436,7 +462,7 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                           fadeOutDuration: Duration(milliseconds: 500),
                           imageUrl: valueOrDefault<String>(
                             widget.avatar,
-                            'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxhcmFyYXR8ZW58MHx8fHwxNzc5NzM4MzYyfDA&ixlib=rb-4.1.0&q=80&w=400',
+                            'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxhcmFyYXR8ZW58MHx8fHwxNzgwMjQ3Njg3fDA&ixlib=rb-4.1.0&q=80&w=400',
                           ),
                           fit: BoxFit.cover,
                           alignment: Alignment(0.0, 0.0),
@@ -460,7 +486,7 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                           Text(
                             valueOrDefault<String>(
                               widget.profileName,
-                              'Ararat Masisyan',
+                              'profileName',
                             ),
                             maxLines: 1,
                             style: FlutterFlowTheme.of(context)
@@ -497,60 +523,81 @@ class _ResultCardWidgetState extends State<ResultCardWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.star_rounded,
+                                color: FlutterFlowTheme.of(context).warning,
+                                size: 20.0,
+                              ),
+                              Text(
+                                '5.0',
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontStyle,
+                                      ),
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontStyle,
+                                      lineHeight: 1.38,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 6.0)),
+                          ),
                           Icon(
-                            Icons.star_rounded,
-                            color: FlutterFlowTheme.of(context).warning,
-                            size: 14.0,
+                            Icons.circle_sharp,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 6.0,
                           ),
-                          Text(
-                            '5.0',
-                            style: FlutterFlowTheme.of(context)
-                                .labelSmall
-                                .override(
-                                  font: GoogleFonts.roboto(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelSmall
-                                        .fontStyle,
-                                  ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .labelSmall
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .labelSmall
-                                      .fontStyle,
-                                  lineHeight: 1.38,
-                                ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.local_shipping_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 20.0,
+                              ),
+                              Text(
+                                widget.sumRoutes.toString(),
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                      font: GoogleFonts.roboto(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelSmall
+                                            .fontStyle,
+                                      ),
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelSmall
+                                          .fontStyle,
+                                      lineHeight: 1.27,
+                                    ),
+                              ),
+                            ].divide(SizedBox(width: 6.0)),
                           ),
-                          Text(
-                            '• 150 рейсов',
-                            style: FlutterFlowTheme.of(context)
-                                .labelSmall
-                                .override(
-                                  font: GoogleFonts.roboto(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelSmall
-                                        .fontStyle,
-                                  ),
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .labelSmall
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .labelSmall
-                                      .fontStyle,
-                                  lineHeight: 1.27,
-                                ),
-                          ),
-                        ].divide(SizedBox(width: 4.0)),
+                        ].divide(SizedBox(width: 12.0)),
                       ),
                     ].divide(SizedBox(height: 4.0)),
                   ),

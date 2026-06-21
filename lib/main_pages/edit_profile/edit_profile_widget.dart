@@ -1154,14 +1154,21 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                                             onPressed: () async {
                                               await UsersTable().update(
                                                 data: {
-                                                  'phone': _model.armPhoneTextController
-                                                                  .text !=
-                                                              ''
-                                                      ? '+374${_model.armPhoneTextController.text}'
-                                                      : '+7${_model.ruPhoneTextController.text}',
+                                                  'phone': () {
+                                                    if (_model.armPhoneTextController
+                                                                .text !=
+                                                            '') {
+                                                      return '+374${_model.armPhoneTextController.text}';
+                                                    } else if (_model.ruPhoneTextController
+                                                                .text !=
+                                                            '') {
+                                                      return '+7${_model.ruPhoneTextController.text}';
+                                                    } else {
+                                                      return '';
+                                                    }
+                                                  }(),
                                                   'name': _model
                                                       .nameTextController.text,
-                                                  'agreed_terms': true,
                                                 },
                                                 matchingRows: (rows) =>
                                                     rows.eqOrNull(
@@ -1243,13 +1250,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget>
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 16.0, 0.0, 16.0),
                               child: FFButtonWidget(
-                                onPressed: () async {
-                                  GoRouter.of(context).prepareAuthEvent();
-                                  await authManager.signOut();
-                                  GoRouter.of(context).clearRedirectLocation();
-
-                                  context.goNamedAuth(
-                                      StartWidget.routeName, context.mounted);
+                                onPressed: () {
+                                  print('Button pressed ...');
                                 },
                                 text: 'Удалить пользователья',
                                 options: FFButtonOptions(

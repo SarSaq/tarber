@@ -192,25 +192,23 @@ class _FavoriteRoutesWidgetState extends State<FavoriteRoutesWidget> {
                           decoration: BoxDecoration(),
                           child: wrapWithModel(
                             model: _model.resultCardModels.getModel(
-                              routesFavoriteRoutesViewRow.userId!,
+                              routesFavoriteRoutesViewRow.routeId!.toString(),
                               routesIndex,
                             ),
                             updateCallback: () => safeSetState(() {}),
                             child: ResultCardWidget(
                               key: Key(
-                                'Keygz9_${routesFavoriteRoutesViewRow.userId!}',
+                                'Keyl88_${routesFavoriteRoutesViewRow.routeId!.toString()}',
                               ),
                               from: routesFavoriteRoutesViewRow.from!,
                               to: routesFavoriteRoutesViewRow.to!,
                               price: routesFavoriteRoutesViewRow.priceKG!,
-                              avatar: valueOrDefault<String>(
-                                routesFavoriteRoutesViewRow.avatarUrl,
-                                'https://images.unsplash.com/photo-1622624751362-328ec4aa688f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwyfHxtYXNpc3xlbnwwfHx8fDE3Nzk2NTcyNzl8MA&ixlib=rb-4.1.0&q=80&w=400',
-                              ),
                               profileName: routesFavoriteRoutesViewRow.name!,
                               routeId: routesFavoriteRoutesViewRow.routeId!,
                               status: routesFavoriteRoutesViewRow.status!,
+                              avatar: routesFavoriteRoutesViewRow.avatarUrl!,
                               routeDate: routesFavoriteRoutesViewRow.routeDate!,
+                              sumRoutes: routesFavoriteRoutesViewRow.sumRoutes,
                             ),
                           ),
                         ),

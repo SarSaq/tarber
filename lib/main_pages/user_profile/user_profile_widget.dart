@@ -791,7 +791,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget>
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
                                           context.pushNamed(
-                                              ComingSoonWidget.routeName);
+                                              EditProfileWidget.routeName);
                                         },
                                         child: Container(
                                           width: double.infinity,

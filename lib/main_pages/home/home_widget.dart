@@ -668,6 +668,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                         '') &&
                                                 (_model.toCityValue != null &&
                                                     _model.toCityValue != '')) {
+                                              FFAppState().searchFrom =
+                                                  FFAppState().searchFrom;
+                                              FFAppState().searchTo =
+                                                  FFAppState().searchTo;
+                                              safeSetState(() {});
+                                              if (Navigator.of(context)
+                                                  .canPop()) {
+                                                context.pop();
+                                              }
                                               context.pushNamed(
                                                   SearchResultWidget.routeName);
                                             } else {

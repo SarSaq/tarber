@@ -183,7 +183,6 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                       widget.routeId,
                     ),
                   );
-                  Navigator.pop(context);
                   if (Navigator.of(context).canPop()) {
                     context.pop();
                   }
@@ -266,7 +265,6 @@ class _StatusBottomSheetWidgetState extends State<StatusBottomSheetWidget> {
                       widget.routeId,
                     ),
                   );
-                  Navigator.pop(context);
                   if (Navigator.of(context).canPop()) {
                     context.pop();
                   }

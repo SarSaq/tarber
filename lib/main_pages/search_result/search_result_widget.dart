@@ -97,7 +97,7 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                   },
                 ),
                 title: Text(
-                  'Результаты поиска',
+                  '${FFAppState().searchFrom} - ${FFAppState().searchTo}',
                   style: FlutterFlowTheme.of(context).titleLarge.override(
                         font: GoogleFonts.roboto(
                           fontWeight: FlutterFlowTheme.of(context)
@@ -120,102 +120,180 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
             : null,
         body: SafeArea(
           top: true,
-          child: FutureBuilder<List<SearchRoutesViewRow>>(
-            future: SearchRoutesViewTable().queryRows(
-              queryFn: (q) => q
-                  .eqOrNull(
-                    'from',
-                    FFAppState().searchFrom,
-                  )
-                  .eqOrNull(
-                    'to',
-                    FFAppState().searchTo,
-                  )
-                  .neqOrNull(
-                    'status',
-                    'cancelled',
-                  )
-                  .neqOrNull(
-                    'status',
-                    'delivered',
-                  ),
-            ),
-            builder: (context, snapshot) {
-              // Customize what your widget looks like when it's loading.
-              if (!snapshot.hasData) {
-                return Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: SpinKitFadingCube(
-                      color: FlutterFlowTheme.of(context).secondary,
-                      size: 50.0,
-                    ),
-                  ),
-                );
-              }
-              List<SearchRoutesViewRow> listViewSearchRoutesViewRowList =
-                  snapshot.data!;
-
-              if (listViewSearchRoutesViewRowList.isEmpty) {
-                return Center(
-                  child: EmptyStateWidget(
-                    iconName: Icon(
-                      Icons.route,
-                      size: 24.0,
-                    ),
-                    message: '',
-                    title: '',
-                  ),
-                );
-              }
-
-              return ListView.builder(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
-                itemCount: listViewSearchRoutesViewRowList.length,
-                itemBuilder: (context, listViewIndex) {
-                  final listViewSearchRoutesViewRow =
-                      listViewSearchRoutesViewRowList[listViewIndex];
-                  return Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 8.0),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        if (Navigator.of(context).canPop()) {
-                          context.pop();
-                        }
-                        context.pushNamed(
-                          RouteDetailsWidget.routeName,
-                          queryParameters: {
-                            'routeId': serializeParam(
-                              listViewSearchRoutesViewRow.id,
-                              ParamType.int,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        'Всего найдено',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              font: GoogleFonts.roboto(
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                              letterSpacing: 0.0,
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
                             ),
-                          }.withoutNulls,
+                      ),
+                      Text(
+                        '0',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              font: GoogleFonts.roboto(
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                              letterSpacing: 0.0,
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                      ),
+                    ].divide(SizedBox(width: 6.0)),
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FutureBuilder<List<SearchRoutesViewRow>>(
+                      future: SearchRoutesViewTable().queryRows(
+                        queryFn: (q) => q
+                            .neqOrNull(
+                              'status',
+                              'cancelled',
+                            )
+                            .neqOrNull(
+                              'status',
+                              'delivered',
+                            )
+                            .eqOrNull(
+                              'from',
+                              FFAppState().searchFrom,
+                            )
+                            .eqOrNull(
+                              'to',
+                              FFAppState().searchTo,
+                            ),
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: SpinKitFadingCube(
+                                color: FlutterFlowTheme.of(context).secondary,
+                                size: 50.0,
+                              ),
+                            ),
+                          );
+                        }
+                        List<SearchRoutesViewRow>
+                            listViewSearchRoutesViewRowList = snapshot.data!;
+
+                        if (listViewSearchRoutesViewRowList.isEmpty) {
+                          return Center(
+                            child: EmptyStateWidget(
+                              iconName: Icon(
+                                Icons.search_rounded,
+                                color: FlutterFlowTheme.of(context).secondary,
+                                size: 36.0,
+                              ),
+                              message: 'Выберите другие параметры поиска',
+                              title: 'Не найдено подходящих рейсов',
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          primary: false,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: listViewSearchRoutesViewRowList.length,
+                          itemBuilder: (context, listViewIndex) {
+                            final listViewSearchRoutesViewRow =
+                                listViewSearchRoutesViewRowList[listViewIndex];
+                            return Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 8.0, 16.0, 8.0),
+                              child: InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () async {
+                                  if (Navigator.of(context).canPop()) {
+                                    context.pop();
+                                  }
+                                  context.pushNamed(
+                                    RouteDetailsWidget.routeName,
+                                    queryParameters: {
+                                      'routeId': serializeParam(
+                                        listViewSearchRoutesViewRow.id,
+                                        ParamType.int,
+                                      ),
+                                    }.withoutNulls,
+                                  );
+                                },
+                                child: wrapWithModel(
+                                  model: _model.resultCardModels.getModel(
+                                    listViewSearchRoutesViewRow.id!.toString(),
+                                    listViewIndex,
+                                  ),
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: ResultCardWidget(
+                                    key: Key(
+                                      'Keyxcg_${listViewSearchRoutesViewRow.id!.toString()}',
+                                    ),
+                                    from: listViewSearchRoutesViewRow.from!,
+                                    to: listViewSearchRoutesViewRow.to!,
+                                    price: listViewSearchRoutesViewRow.priceKG!,
+                                    profileName:
+                                        listViewSearchRoutesViewRow.name!,
+                                    routeId: listViewSearchRoutesViewRow.id!,
+                                    status: listViewSearchRoutesViewRow.status!,
+                                    routeDate:
+                                        listViewSearchRoutesViewRow.routeDate!,
+                                    avatar:
+                                        listViewSearchRoutesViewRow.avatarUrl!,
+                                    sumRoutes:
+                                        listViewSearchRoutesViewRow.sumRoutes,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
-                      child: ResultCardWidget(
-                        key: Key(
-                            'Keyje0_${listViewIndex}_of_${listViewSearchRoutesViewRowList.length}'),
-                        from: listViewSearchRoutesViewRow.from!,
-                        to: listViewSearchRoutesViewRow.to!,
-                        price: listViewSearchRoutesViewRow.priceKG!,
-                        avatar: listViewSearchRoutesViewRow.avatarUrl!,
-                        profileName: listViewSearchRoutesViewRow.name!,
-                        routeId: listViewSearchRoutesViewRow.id!,
-                        status: listViewSearchRoutesViewRow.status!,
-                        routeDate: listViewSearchRoutesViewRow.routeDate!,
-                      ),
                     ),
-                  );
-                },
-              );
-            },
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
